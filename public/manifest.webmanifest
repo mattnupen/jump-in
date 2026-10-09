@@ -1,0 +1,13 @@
+{
+  "name": "funAAC Ready",
+  "short_name": "Ready",
+  "description": "Picture-based conversation moves for teens who use AAC.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0E1214",
+  "theme_color": "#0E1214",
+  "icons": [
+    { "src": "/icons/app-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icons/app-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

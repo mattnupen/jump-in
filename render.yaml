@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: funaac-ready
+    runtime: node
+    plan: free
+    buildCommand: node build.js
+    startCommand: node server.js
+    healthCheckPath: /healthz
+    envVars:
+      - key: ANTHROPIC_API_KEY
+        sync: false
