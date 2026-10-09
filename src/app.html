@@ -2,20 +2,55 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=DM+Sans:wght@400;500;700&display=swap">
 <style>
 /* Layout: one phone-width column; status bar, scrolling view, fixed tab bar. Deliberately dark-only. */
+/* Light is the default theme; Setup > Look switches to dark. Every pair below keeps text at 4.5:1 or better. */
 :root {
+  --bg: #F4F6F3;
+  --surface: #FFFFFF;
+  --surface-2: #EDF1EE;
+  --line: #C9D1CE;
+  --line-strong: #7A8A90;
+  --fg: #14201F;
+  --fg-2: #2B3A40;
+  --muted: #48565B;
+  --placeholder: #56656B;
+  --accent: #0B7A67;
+  --accent-ink: #FFFFFF;
+  --accent-soft: #DDF3EC;
+  --glow: rgba(11, 122, 103, 0.28);
+  --warn: #A86A00;
+  --hold-bg: #FFF1CC;
+  --danger: #B42318;
+  --danger-line: #E7A39C;
+  --tabbar: #FFFFFF;
+  --knob: #9AA7AC;
+  --knob-dot: #FFFFFF;
+  --overlay: rgba(20, 32, 31, 0.45);
+  --font-display: 'Bricolage Grotesque', 'Avenir Next', 'Segoe UI', sans-serif;
+  --font-body: 'DM Sans', -apple-system, 'Segoe UI', sans-serif;
+  color-scheme: light;
+}
+:root[data-theme="dark"] {
   --bg: #0E1214;
   --surface: #1A2226;
   --surface-2: #263036;
   --line: #34424A;
+  --line-strong: #74858E;
   --fg: #F4F4F0;
+  --fg-2: #D3DCDF;
   --muted: #B8C2C8;
+  --placeholder: #9BA8AF;
   --accent: #5EE0C8;
   --accent-ink: #0E1214;
   --accent-soft: #173A35;
+  --glow: var(--glow);
   --warn: #F7C948;
+  --hold-bg: #3A3216;
   --danger: #FF8A7A;
-  --font-display: 'Bricolage Grotesque', 'Avenir Next', 'Segoe UI', sans-serif;
-  --font-body: 'DM Sans', -apple-system, 'Segoe UI', sans-serif;
+  --danger-line: #5A3A36;
+  --tabbar: #12181B;
+  --knob: #4A5961;
+  --knob-dot: #F4F4F0;
+  --overlay: rgba(5, 8, 9, 0.7);
   color-scheme: dark;
 }
 html { font-size: 100%; -webkit-text-size-adjust: 100%; }
@@ -25,11 +60,11 @@ body { background: var(--bg); color: var(--fg); font-family: var(--font-body); f
 button, input, select { font: inherit; color: inherit; }
 button { cursor: pointer; }
 button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, [role=button]:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
-.ic { width: 36px; height: 36px; flex-shrink: 0; display: block; }
-.ic.s { width: 24px; height: 24px; }
-.ic.m { width: 30px; height: 30px; }
-.ic.l { width: 46px; height: 46px; }
-.ic.xl { width: 84px; height: 84px; }
+.ic { width: 42px; height: 42px; flex-shrink: 0; display: block; }
+.ic.s { width: 28px; height: 28px; }
+.ic.m { width: 36px; height: 36px; }
+.ic.l { width: 56px; height: 56px; }
+.ic.xl { width: 96px; height: 96px; }
 
 #app { max-width: 480px; margin: 0 auto; min-height: 100%; display: flex; flex-direction: column; }
 .top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); padding: 10px 16px 8px; display: flex; flex-direction: column; gap: 8px; }
@@ -42,23 +77,26 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .dot.warn { background: var(--warn); }
 
 .said { display: flex; align-items: center; gap: 8px; background: var(--surface); border-radius: 18px; padding: 6px 6px 6px 8px; min-height: 64px; }
-.said.hold { background: #3A3216; outline: 2px solid var(--warn); }
+.said.hold { background: var(--hold-bg); outline: 2px solid var(--warn); }
 .said .words { display: flex; gap: 4px; overflow: hidden; flex: 1; min-width: 0; align-items: center; }
 .said .empty { color: var(--muted); font-size: 1rem; display: flex; align-items: center; gap: 8px; }
 .said .text { font-size: 0.875rem; color: var(--muted); overflow-wrap: anywhere; }
 .word { display: flex; flex-direction: column; align-items: center; min-width: 44px; flex-shrink: 0; }
 .word span { font-size: 0.8125rem; font-weight: 700; white-space: nowrap; }
 .roundbtn { min-width: 56px; min-height: 56px; padding: 4px 6px; border-radius: 16px; border: none; background: var(--surface-2); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; flex-shrink: 0; font-size: 0.8125rem; font-weight: 700; }
-.roundbtn .ic { width: 28px; height: 28px; }
+.roundbtn .ic { width: 32px; height: 32px; }
 
 main { flex: 1; padding: 4px 16px calc(96px + env(safe-area-inset-bottom, 0px)); display: flex; flex-direction: column; gap: 12px; }
 .row { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
 .row::-webkit-scrollbar { display: none; }
-.chip { min-height: 48px; padding: 0 14px 0 6px; border-radius: 24px; border: 2px solid transparent; background: var(--surface); display: flex; align-items: center; gap: 6px; white-space: nowrap; font-weight: 500; font-size: 1.0625rem; flex-shrink: 0; }
+.chip { box-shadow: inset 0 0 0 1px var(--line); min-height: 48px; padding: 0 14px 0 6px; border-radius: 24px; border: 2px solid transparent; background: var(--surface); display: flex; align-items: center; gap: 6px; white-space: nowrap; font-weight: 500; font-size: 1.0625rem; flex-shrink: 0; }
 .chip.on { background: var(--accent-soft); border-color: var(--accent); font-weight: 700; }
+.hd { background: none; border: none; padding: 0; min-height: 44px; text-align: left; cursor: pointer; }
+.hd .ic.xs { opacity: 0.7; }
+.h2btn { display: flex; align-items: center; gap: 8px; font: inherit; color: inherit; width: 100%; }
 .label { font-size: 0.9375rem; color: var(--muted); display: flex; align-items: center; gap: 6px; }
 .avatar { width: 34px; height: 34px; border-radius: 17px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-.avatar .ic { width: 26px; height: 26px; }
+.avatar .ic { width: 28px; height: 28px; filter: brightness(0); opacity: 0.72; }
 
 .moves { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
 .movewrap { position: relative; display: flex; }
@@ -70,24 +108,26 @@ main { flex: 1; padding: 4px 16px calc(96px + env(safe-area-inset-bottom, 0px));
 .page-head { flex-wrap: wrap; position: sticky; top: calc(-12px - env(safe-area-inset-top, 0px)); z-index: 2; background: var(--bg); margin: -12px -16px 0; padding: 12px 16px 8px; display: flex; align-items: center; gap: 10px; }
 .page-head h2 { margin: 0; flex: 1 1 auto; min-width: 0; font-family: var(--font-display); font-weight: 800; font-size: 1.625rem; display: flex; align-items: center; gap: 8px; }
 .ptiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
-.ptile { position: relative; min-height: 76px; border-radius: 18px; border: none; background: var(--surface); display: flex; align-items: center; gap: 8px; padding: 8px 10px 8px 8px; text-align: left; font-weight: 700; font-size: 1.0625rem; line-height: 1.2; }
+.ptile { box-shadow: inset 0 0 0 1px var(--line); position: relative; min-height: 76px; border-radius: 18px; border: none; background: var(--surface); display: flex; align-items: center; gap: 8px; padding: 8px 10px 8px 8px; text-align: left; font-weight: 700; font-size: 1.0625rem; line-height: 1.2; }
 .ptile:active { transform: scale(0.97); }
 .ptile .icons { display: flex; flex-direction: column; gap: 2px; flex-shrink: 0; }
-.ptile .icons .ic { width: 32px; height: 32px; }
+.picon { position: relative; flex-shrink: 0; display: flex; }
+.picon .ic { width: 48px; height: 48px; }
+.qbadge { position: absolute; right: -6px; top: -6px; width: 22px; height: 22px; border-radius: 11px; background: #2563C9; color: #FFFFFF; font-weight: 800; font-size: 15px; line-height: 22px; text-align: center; }
 .ptwrap { display: flex; flex-direction: column; gap: 6px; }
 .ptwrap .ptile { flex: 1; }
-.move { position: relative; min-height: 118px; border-radius: 22px; border: 3px solid transparent; background: var(--surface); padding: 10px 12px; display: flex; flex-direction: column; justify-content: space-between; gap: 6px; text-align: left; transition: transform .08s; }
+.move { box-shadow: 0 1px 0 var(--line); position: relative; min-height: 118px; border-radius: 22px; border: 3px solid transparent; background: var(--surface); padding: 10px 12px; display: flex; flex-direction: column; justify-content: space-between; gap: 6px; text-align: left; transition: transform .08s; }
 .move:active, .tile:active, .chip:active, .join:active { transform: scale(0.97); }
-.move.next { background: var(--accent-soft); border-color: var(--accent); box-shadow: 0 0 0 4px rgba(94, 224, 200, 0.25), 0 0 22px rgba(94, 224, 200, 0.45); animation: glow 2.4s ease-in-out infinite; }
+.move.next { background: var(--accent-soft); border-color: var(--accent); box-shadow: 0 0 0 4px var(--glow), 0 0 22px var(--glow); animation: glow 2.4s ease-in-out infinite; }
 .move.changed .phrase { animation: changed 1.2s ease-out; }
-@keyframes changed { 0% { color: var(--accent); transform: scale(1.04); } 100% { color: #D3DCDF; transform: none; } }
-@keyframes glow { 50% { box-shadow: 0 0 0 6px rgba(94, 224, 200, 0.18), 0 0 30px rgba(94, 224, 200, 0.6); } }
+@keyframes changed { 0% { color: var(--accent); transform: scale(1.04); } 100% { color: var(--fg-2); transform: none; } }
+@keyframes glow { 50% { box-shadow: 0 0 0 6px var(--glow), 0 0 30px var(--glow); } }
 .move .head { display: flex; align-items: center; gap: 8px; width: 100%; }
 .move .name { font-family: var(--font-display); font-weight: 800; font-size: 1.25rem; }
-.badge { position: absolute; top: -12px; right: 12px; background: var(--accent); color: var(--accent-ink); font-size: 0.8125rem; font-weight: 800; padding: 2px 7px 2px 3px; border-radius: 9px; letter-spacing: 0.5px; display: flex; align-items: center; gap: 2px; }
+.badge { position: absolute; top: -14px; z-index: 1; right: 12px; background: var(--accent); color: var(--accent-ink); font-size: 0.8125rem; font-weight: 800; padding: 2px 7px 2px 3px; border-radius: 9px; letter-spacing: 0.5px; display: flex; align-items: center; gap: 2px; }
 .ic.xs { width: 16px; height: 16px; }
 .vh { position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden; pointer-events: none; }
-.move .phrase { font-size: 0.9375rem; color: #D3DCDF; line-height: 1.3; }
+.move .phrase { font-size: 0.9375rem; color: var(--fg-2); line-height: 1.3; }
 
 .alts { background: var(--surface); border-radius: 20px; padding: 10px; display: flex; flex-direction: column; gap: 8px; }
 .join { min-height: 58px; border-radius: 18px; border: none; background: var(--surface-2); display: flex; align-items: center; gap: 8px; padding: 6px 12px 6px 8px; text-align: left; font-weight: 700; font-size: 1.0625rem; width: 100%; }
@@ -99,19 +139,19 @@ main { flex: 1; padding: 4px 16px calc(96px + env(safe-area-inset-bottom, 0px));
 .big.wide { width: 100%; }
 
 .reactions { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
-.tile { min-height: 78px; border-radius: 18px; border: none; background: var(--surface); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; font-weight: 700; font-size: 0.9375rem; padding: 4px; }
+.tile { box-shadow: inset 0 0 0 1px var(--line); min-height: 78px; border-radius: 18px; border: none; background: var(--surface); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; font-weight: 700; font-size: 0.9375rem; padding: 4px; }
 
 .news { display: flex; flex-direction: column; gap: 10px; }
-.card { border-radius: 22px; border: 3px solid transparent; background: var(--surface); padding: 8px; display: flex; gap: 10px; align-items: center; text-align: left; width: 100%; }
+.card { box-shadow: inset 0 0 0 1px var(--line); border-radius: 22px; border: 3px solid transparent; background: var(--surface); padding: 8px; display: flex; gap: 10px; align-items: center; text-align: left; width: 100%; }
 .card.on { border-color: var(--accent); background: var(--accent-soft); }
 .photo { width: 104px; height: 104px; border-radius: 16px; flex-shrink: 0; background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; }
 .card .body { display: flex; flex-direction: column; gap: 6px; min-width: 0; flex: 1; }
 .wordsrow { display: flex; gap: 4px; flex-wrap: wrap; }
 .wordsrow .word { background: var(--surface-2); border-radius: 10px; padding: 3px 4px; }
-.card .sentence { font-size: 1rem; color: #D3DCDF; }
+.card .sentence { font-size: 1rem; color: var(--fg-2); }
 .edit-row { display: flex; gap: 8px; }
 .small { min-height: 44px; padding: 0 14px; border-radius: 14px; border: 1.5px solid var(--line); background: transparent; font-size: 1rem; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; }
-.small.danger { color: var(--danger); border-color: #5A3A36; }
+.small.danger { color: var(--danger); border-color: var(--danger-line); }
 .small.accent { border-color: var(--accent); color: var(--accent); }
 
 .section { background: var(--surface); border-radius: 22px; padding: 14px; display: flex; flex-direction: column; gap: 12px; }
@@ -119,16 +159,21 @@ main { flex: 1; padding: 4px 16px calc(96px + env(safe-area-inset-bottom, 0px));
 .section p { margin: 0; color: var(--muted); font-size: 1rem; line-height: 1.45; }
 .field { display: flex; flex-direction: column; gap: 6px; }
 .field label { font-size: 0.9375rem; color: var(--muted); }
-.input { min-height: 48px; border-radius: 14px; border: 1.5px solid var(--line); background: var(--bg); padding: 0 12px; font-size: 1.0625rem; width: 100%; min-width: 0; }
+.input { min-height: 48px; border-radius: 14px; border: 1.5px solid var(--line-strong); background: var(--bg); padding: 0 12px; font-size: 1.0625rem; width: 100%; min-width: 0; }
 select.input { padding-right: 8px; }
 input[type=range] { width: 100%; accent-color: var(--accent); height: 44px; }
-.input::placeholder { color: #9BA8AF; opacity: 1; }
+:root:not([data-theme="dark"]) input[type=range] { -webkit-appearance: none; appearance: none; background: transparent; }
+:root:not([data-theme="dark"]) input[type=range]::-webkit-slider-runnable-track { height: 8px; border-radius: 4px; background: var(--line-strong); }
+:root:not([data-theme="dark"]) input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 28px; height: 28px; margin-top: -10px; border-radius: 14px; background: var(--accent); border: 3px solid #FFFFFF; box-shadow: 0 0 0 1px var(--accent); }
+:root:not([data-theme="dark"]) input[type=range]::-moz-range-track { height: 8px; border-radius: 4px; background: var(--line-strong); }
+:root:not([data-theme="dark"]) input[type=range]::-moz-range-thumb { width: 24px; height: 24px; border-radius: 12px; background: var(--accent); border: 3px solid #FFFFFF; }
+.input::placeholder { color: var(--placeholder); opacity: 1; }
 .seg { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
 .seg button { min-height: 56px; border-radius: 14px; border: 2px solid var(--line); background: transparent; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-weight: 700; }
 .seg button.on { border-color: var(--accent); background: var(--accent-soft); }
 .switch { min-height: 56px; width: 100%; border-radius: 16px; border: 2px solid var(--line); background: transparent; display: flex; align-items: center; gap: 10px; padding: 6px 12px 6px 8px; text-align: left; font-weight: 700; }
-.switch .knob { margin-left: auto; width: 52px; height: 32px; border-radius: 16px; background: #4A5961; position: relative; flex-shrink: 0; }
-.switch .knob::after { content: ''; position: absolute; top: 3px; left: 3px; width: 26px; height: 26px; border-radius: 13px; background: #F4F4F0; transition: left .15s; }
+.switch .knob { margin-left: auto; width: 52px; height: 32px; border-radius: 16px; background: var(--knob); position: relative; flex-shrink: 0; }
+.switch .knob::after { content: ''; position: absolute; top: 3px; left: 3px; width: 26px; height: 26px; border-radius: 13px; background: var(--knob-dot); transition: left .15s; }
 .switch.on { border-color: var(--accent); }
 .switch.on .knob { background: var(--accent); }
 .switch.on .knob::after { left: 23px; background: var(--accent-ink); }
@@ -138,19 +183,19 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 44px; }
 .toggles { display: flex; gap: 6px; flex-wrap: wrap; }
 .tog { min-height: 44px; padding: 0 10px 0 4px; border-radius: 22px; border: 2px solid var(--line); background: transparent; display: flex; align-items: center; gap: 4px; font-size: 0.9375rem; font-weight: 500; }
 .tog.on { border-color: var(--accent); background: var(--accent-soft); font-weight: 700; }
-.iconbtn { min-width: 64px; min-height: 64px; padding: 4px; border-radius: 14px; border: 1.5px dashed #5B6B74; background: var(--surface-2); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; flex-shrink: 0; font-size: 0.8125rem; font-weight: 700; }
+.iconbtn { min-width: 64px; min-height: 64px; padding: 4px; border-radius: 14px; border: 1.5px dashed var(--line-strong); background: var(--surface-2); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; flex-shrink: 0; font-size: 0.8125rem; font-weight: 700; }
 .iconbtn .ic { width: 32px; height: 32px; }
 .note { font-size: 0.9375rem; color: var(--muted); }
 .note.err { color: var(--danger); }
 
-.tabs { position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; background: #12181B; border-top: 1px solid var(--surface-2); padding: 6px 8px calc(6px + env(safe-area-inset-bottom, 0px)); }
+.tabs { position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; background: var(--tabbar); border-top: 1px solid var(--line); padding: 6px 8px calc(6px + env(safe-area-inset-bottom, 0px)); }
 .tabs .inner { max-width: 480px; margin: 0 auto; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px; }
 .tab { min-height: 62px; border: none; border-radius: 16px; background: transparent; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 0.875rem; font-weight: 700; color: var(--muted); }
 .tab { border: 2px solid transparent !important; }
 .tab.on { background: var(--accent-soft); color: var(--fg); border-color: var(--accent) !important; }
-.tab .ic { width: 30px; height: 30px; }
+.tab .ic { width: 36px; height: 36px; }
 
-.overlay { position: fixed; inset: 0; z-index: 20; background: rgba(5, 8, 9, 0.7); display: flex; align-items: flex-end; justify-content: center; }
+.overlay { position: fixed; inset: 0; z-index: 20; background: var(--overlay); display: flex; align-items: flex-end; justify-content: center; }
 .sheet { width: 100%; max-width: 480px; max-height: 92%; overflow-y: auto; background: var(--bg); border-radius: 26px 26px 0 0; padding: 14px 16px calc(20px + env(safe-area-inset-bottom, 0px)); display: flex; flex-direction: column; gap: 12px; border-top: 1px solid var(--surface-2); }
 .sheet-head { display: flex; align-items: center; gap: 10px; }
 .sheet-head h2 { margin: 0; font-family: var(--font-display); font-weight: 800; font-size: 1.375rem; flex: 1; }
@@ -173,6 +218,8 @@ html.big-text .top { position: static; }
 html.big-text .brand { flex-wrap: wrap; }
 html.big-text .status { margin-left: 0; white-space: normal; flex-basis: 100%; }
 html.big-text .picker { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+html.big-text .move { padding-top: 22px; }
+.picker .tile { font-size: 0.8125rem; overflow-wrap: break-word; hyphens: manual; padding-left: 4px; padding-right: 4px; }
 html.big-text .reactions, html.big-text .yesno { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 html.big-text .ptiles { grid-template-columns: 1fr; }
 @keyframes spin { to { transform: rotate(360deg); } }
@@ -196,7 +243,22 @@ html.big-text .ptiles { grid-template-columns: 1fr; }
 <script>
 const ICON_SVG = /*__ICONS__*/{};
 const ICON = {};
-for (const k in ICON_SVG) ICON[k] = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(ICON_SVG[k]);
+// Pictographs drawn in white (or near-black) need a different ink on each theme so they never vanish.
+const INK_ICONS = ['plus', 'speaker', 'next', 'skip', 'skate', 'arrowright', 'savecheck', 'showfriends', 'copy', 'textmsg'];
+// White parts that sit on the page (not on a coloured shape) turn mid grey in light mode.
+const GREY_ICONS = ['watch', 'soccer', 'rocket', 'mic', 'done', 'lunch', 'outside'];
+function buildIcons(theme) {
+  for (const k in ICON_SVG) {
+    let svg = ICON_SVG[k];
+    if (theme === 'light') {
+      if (INK_ICONS.includes(k)) svg = svg.replace(/#F4F4F0/gi, '#2B3A40');
+      else if (GREY_ICONS.includes(k)) svg = svg.replace(/#F4F4F0/gi, '#8E9A96').replace(/#DADAD2/gi, '#A7B1AD');
+    }
+    else svg = svg.replace(/(stroke|fill)="#1A1A1F"/gi, (m, a) => (k === 'arrowright' || k === 'savecheck') ? `${a}="#F4F4F0"` : m);
+    ICON[k] = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+  }
+}
+buildIcons('light');
 
 const LABELS = {
   again: 'again', all: 'all', bye: 'bye', cake: 'birthday', camera: 'photo', chat: 'message', comeover: 'come over',
@@ -273,7 +335,7 @@ const DEFAULT_CARD = [
   { icon: 'smile', text: 'Talk to me like you talk to anyone.' },
   { icon: 'hangout', text: 'Ask me about my news. I love to share.' }
 ];
-const DEFAULT_SETTINGS = { speakButtons: true, textSize: 1 };
+const DEFAULT_SETTINGS = { speakButtons: true, textSize: 1, theme: 'light' };
 function defaultData() {
   return {
     profile: {
@@ -340,6 +402,13 @@ function buttonLabel(t) {
   if (t.dataset.say) return t.dataset.say;
   const txt = (t.textContent || '').replace(/\s+/g, ' ').trim();
   return txt || t.getAttribute('aria-label') || '';
+}
+function applyTheme() {
+  const t = (S.profile.settings && S.profile.settings.theme) || 'light';
+  document.documentElement.dataset.theme = t;
+  buildIcons(t);
+  const m = document.querySelector('meta[name="theme-color"]'); if (m) m.content = t === 'dark' ? '#0E1214' : '#F4F6F3';
+  const bi = document.getElementById('brandIcon'); if (bi) bi.src = ICON.wave;
 }
 function applyTextSize() {
   const z = Number(S.profile.settings && S.profile.settings.textSize) || 1;
@@ -504,7 +573,7 @@ async function initStore() {
     // Ask the browser not to clear this app's storage when the phone is low on space.
     try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch (e) {}
   }
-  applyTextSize();
+  applyTheme(); applyTextSize();
   renderStatus();
   render();
 }
@@ -558,7 +627,7 @@ async function resetAll() {
   } else { try { localStorage.removeItem(LS_KEY); } catch (e) {} }
   const fresh = defaultData();
   S.profile = fresh.profile; S.news = fresh.news; S.withId = null; S.topicId = 't1'; S.last = null; S.step = 0;
-  applyTextSize(); renderStatus(); render();
+  applyTheme(); applyTextSize(); renderStatus(); render();
 }
 function renderStatus() {
   const el = document.getElementById('status');
@@ -621,6 +690,12 @@ function cleanWords(arr) {
 /* ---------- rendering ---------- */
 function note(msg, err) { return `<div class="note ${err ? 'err' : ''} flexrow">${ic(err ? 'help' : 'idea', 's')}<span>${esc(msg)}</span></div>`; }
 function safePhoto(u) { return typeof u === 'string' && /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+\/=]+$/.test(u) ? u : null; }
+function phraseIcon(p) {
+  const ws = p.words || [];
+  const main = (ws.find(w => w.icon !== 'qmark' && w.icon !== 'question') || ws[0] || { icon: 'chat' }).icon;
+  const isQ = ws.some(w => w.icon === 'qmark' || w.icon === 'question') || /\?\s*$/.test(p.text || '');
+  return `<span class="picon">${ic(main)}${isQ && main !== 'question' && main !== 'qmark' ? '<span class="qbadge" aria-hidden="true">?</span>' : ''}</span>`;
+}
 function wordStrip(ws, cls) { return ws.map(w => `<span class="word">${ic(w.icon, cls || 'm')}<span>${esc(w.label)}</span></span>`).join(''); }
 function renderSaid() {
   renderSaidInto();
@@ -666,8 +741,8 @@ function viewTalk() {
   if (S.openMove) {
     const m = MOVES.find(x => x.id === S.openMove);
     const ps = phrasesFor(S.openMove).slice(1);
-    if (ps.length) alts = `<div class="alts"><div class="flexrow" style="justify-content:space-between"><div class="label">${ic(m.icon, 's')}Other ways: ${esc(m.name)}</div><button class="small" data-act="page" data-id="${m.id}">${ic('plus', 's')}See all</button></div>` +
-      ps.map((p, i) => `<button class="join" data-act="alt" data-i="${i + 1}"><span class="icons">${p.words.slice(0, 2).map(w => ic(w.icon)).join('')}</span><span>${esc(p.text)}</span></button>`).join('') + '</div>';
+    if (ps.length) alts = `<div class="alts"><div class="flexrow" style="justify-content:space-between"><button class="label hd" data-act="sayLabel">${ic(m.icon, 's')}Other ways: ${esc(m.name)}${ic('speaker', 'xs')}</button><button class="small" data-act="page" data-id="${m.id}">${ic('plus', 's')}See all</button></div>` +
+      ps.map((p, i) => `<button class="join" data-act="alt" data-i="${i + 1}">${phraseIcon(p)}<span>${esc(p.text)}</span></button>`).join('') + '</div>';
   }
   const lunchHint = S.place === 'lunch' ? `<button class="big wide" data-act="tab" data-id="group">${ic('hangout')}Group mode for lunch</button>` : '';
   return `<div class="row" role="group" aria-label="Where are you">${placeChips}</div>
@@ -693,14 +768,13 @@ function viewGroup() {
   const t = topics.find(x => x.id === S.topicId) || topics[0];
   const topicChips = topics.map(x => `<button class="chip ${x.id === t.id ? 'on' : ''}" data-act="topic" data-id="${esc(x.id)}">${ic(x.icon, 'm')}${esc(x.name)}</button>`).join('');
   const reactions = REACTIONS.map((r, i) => `<button class="tile" data-act="react" data-i="${i}">${ic(r.icon, 'l')}${esc(r.label)}</button>`).join('');
-  const joins = t.phrases.map((p, i) => `<button class="join" data-act="join" data-i="${i}"><span class="icons">${p.words.slice(0, 2).map(w => ic(w.icon)).join('')}</span><span>${esc(p.text)}</span></button>`).join('');
-  return `<div class="label">${ic('ticket', 's')}Talking about</div>
-    <div class="row" role="group" aria-label="Topic">${topicChips}</div>
+  const joins = t.phrases.map((p, i) => `<button class="join" data-act="join" data-i="${i}">${phraseIcon(p)}<span>${esc(p.text)}</span></button>`).join('');
+  return `<div class="row" role="group" aria-label="Topic">${topicChips}</div>
     <div class="reactions">${reactions}</div>
-    <div class="label">${ic(t.icon, 's')}Join in about ${esc(t.name)}</div>
+    <button class="label hd" data-act="sayLabel">${ic(t.icon, 's')}Join in about ${esc(t.name)}${ic('speaker', 'xs')}</button>
     <div class="alts" style="padding:8px">${joins || note('No phrases yet. Add some in Setup.')}</div>
-    <div class="label">${ic('question', 's')}Ask the group</div>
-    <div class="ptiles">${GROUP_ASK.map((p, i) => `<button class="ptile" data-act="groupAsk" data-i="${i}"><span class="icons">${p.words.slice(0, 2).map(w => ic(w.icon)).join('')}</span><span>${esc(p.text)}</span></button>`).join('')}</div>
+    <button class="label hd" data-act="sayLabel">${ic('question', 's')}Ask the group${ic('speaker', 'xs')}</button>
+    <div class="ptiles">${GROUP_ASK.map((p, i) => `<button class="ptile" data-act="groupAsk" data-i="${i}">${phraseIcon(p)}<span>${esc(p.text)}</span></button>`).join('')}</div>
     <div class="quick">
       <button class="big warn" data-act="hold">${ic('holdon')}Hold on</button>
       <button class="big" data-act="show">${ic('showfriends')}Show friends</button>
@@ -721,13 +795,13 @@ function viewNews() {
       ${S.newsEdit ? `<div class="edit-row"><button class="small" data-act="newsEditOne" data-id="${esc(item.id)}">${ic('do', 's')}Edit</button><button class="small danger" data-act="newsDelete" data-id="${esc(item.id)}">${ic('no', 's')}Remove</button></div>` : ''}
     </div>`).join('');
   return `<div class="flexrow" style="justify-content:space-between">
-      <div class="label">${ic('camera', 's')}Tap a story to tell it</div>
+      <button class="label hd" data-act="sayLabel">${ic('camera', 's')}Tap a story to tell it${ic('speaker', 'xs')}</button>
       <button class="small" data-act="newsEditToggle">${S.newsEdit ? ic('done', 's') + 'Done' : ic('do', 's') + 'Edit'}</button>
     </div>
     <div class="news">${cards || note('No news yet. Add a photo from your day or weekend, then tap it to tell friends.')}</div>
     <button class="big primary wide" data-act="newsAdd">${ic('camera')}Add news from a photo</button>
-    <div class="label">${ic('tellmore', 's')}Keep it going</div>
-    <div class="ptiles">${NEWS_FOLLOW.map((p, i) => `<button class="ptile" data-act="newsFollow" data-i="${i}"><span class="icons">${p.words.slice(0, 2).map(w => ic(w.icon)).join('')}</span><span>${esc(p.text)}</span></button>`).join('')}</div>
+    <button class="label hd" data-act="sayLabel">${ic('tellmore', 's')}Keep it going${ic('speaker', 'xs')}</button>
+    <div class="ptiles">${NEWS_FOLLOW.map((p, i) => `<button class="ptile" data-act="newsFollow" data-i="${i}">${phraseIcon(p)}<span>${esc(p.text)}</span></button>`).join('')}</div>
     <button class="big wide" data-act="askBack">${ic('question')}Ask back: What did you do?</button>`;
 }
 
@@ -745,7 +819,7 @@ function viewSetup() {
         <button class="iconbtn" style="background:${esc(f.color)};border:none;color:#0E1214" data-act="friendColor" data-id="${esc(f.id)}" data-say="Change color">${ic('jordan')}color</button>
         <input class="input" data-bind="friend.name" data-id="${esc(f.id)}" value="${esc(f.name)}" aria-label="Friend's name" placeholder="Name">
       </div>
-      <div class="label">${ic('want', 's')}${esc(f.name || 'They')} likes</div>
+      <button class="label hd" data-act="sayLabel">${ic('want', 's')}${esc(f.name || 'They')} likes${ic('speaker', 'xs')}</button>
       <div class="toggles">${Object.keys(INTERESTS).map(k => { const on = f.interests.includes(k); return `<button class="tog ${on ? 'on' : ''}" data-act="interest" data-id="${esc(f.id)}" data-k="${k}" aria-pressed="${on}">${ic(k, 'm')}${esc(LABELS[k])}</button>`; }).join('')}</div>
       <button class="small danger" data-act="friendDelete" data-id="${esc(f.id)}" data-say="Remove ${esc(f.name || 'friend')}">${ic('no', 's')}Remove ${esc(f.name || 'friend')}</button>
     </div>`).join('');
@@ -770,7 +844,7 @@ function viewSetup() {
   const own = PHRASE_HOMES.map(m => {
     const list = p.custom[m.id] || [];
     if (!list.length) return '';
-    return `<div class="label">${ic(m.icon, 's')}${esc(m.name)}</div>` + list.map((ph, i) => `<div class="flexrow" style="flex-wrap:wrap">
+    return `<button class="label hd" data-act="sayLabel">${ic(m.icon, 's')}${esc(m.name)}${ic('speaker', 'xs')}</button>` + list.map((ph, i) => `<div class="flexrow" style="flex-wrap:wrap">
       <span class="flexrow" style="flex:1;min-width:0">${ic((ph.words[0] || {}).icon || m.icon, 'm')}<span>${esc(ph.text)}</span></span>
       <button class="small danger" data-act="ownDelete" data-m="${m.id}" data-i="${i}" data-say="Remove ${esc(ph.text)}">${ic('no', 's')}Remove</button></div>`).join('');
   }).join('');
@@ -783,11 +857,11 @@ function viewSetup() {
     store.mode === 'local' ? 'Everything is saved on this phone only, even with no internet. Back it up to keep a copy or move it to another phone.' : 'Saving is not available here, so changes last until you close the page.';
   return `
     <div class="section">
-      <h2>${ic('me', 'm')}About me</h2>
+      <h2><button class="hd h2btn" data-act="sayLabel">${ic('me', 'm')}About me${ic('speaker', 'xs')}</button></h2>
       <div class="field"><label class="label" for="f-name">${ic('me', 's')}My name</label><input class="input" id="f-name" data-bind="name" value="${esc(p.name)}" autocomplete="off"></div>
     </div>
     <div class="section">
-      <h2>${ic('voice', 'm')}My voice</h2>
+      <h2><button class="hd h2btn" data-act="sayLabel">${ic('voice', 'm')}My voice${ic('speaker', 'xs')}</button></h2>
       <div class="field"><label class="label" for="f-voice">${ic('voice', 's')}Voice</label><select class="input" id="f-voice" data-bind="voice">${voiceOpts}</select></div>
       <div class="field"><label class="label" for="f-rate">${ic('go', 's')}Speed</label><input type="range" id="f-rate" min="0.6" max="1.4" step="0.1" value="${esc(p.rate || 1)}" data-bind="rate" aria-valuetext="${Math.round((p.rate || 1) * 100)} percent"></div>
       <button class="small accent" data-act="testVoice">${ic('speaker', 's')}Test my voice</button>
@@ -795,28 +869,35 @@ function viewSetup() {
       ${note('No sound? Turn off silent mode with the switch on the side of the iPhone.')}
     </div>
     <div class="section">
-      <h2>${ic('picture', 'm')}Text size</h2>
+      <h2><button class="hd h2btn" data-act="sayLabel">${ic('outside', 'm')}Look${ic('speaker', 'xs')}</button></h2>
+      <div class="seg" role="group" aria-label="Look">
+        <button class="${st.theme !== 'dark' ? 'on' : ''}" data-act="theme" data-v="light" aria-pressed="${st.theme !== 'dark'}">${ic('outside', 'm')}Light</button>
+        <button class="${st.theme === 'dark' ? 'on' : ''}" data-act="theme" data-v="dark" aria-pressed="${st.theme === 'dark'}">${ic('saturday', 'm')}Dark</button>
+      </div>
+    </div>
+    <div class="section">
+      <h2><button class="hd h2btn" data-act="sayLabel">${ic('picture', 'm')}Text size${ic('speaker', 'xs')}</button></h2>
       <div class="seg" role="group" aria-label="Text size">${TEXT_SIZES.map(z => `<button class="${st.textSize === z.v ? 'on' : ''}" data-act="textSize" data-v="${z.v}" aria-pressed="${st.textSize === z.v}" style="font-size:${Math.round(16 * z.v)}px">${ic('story', 's')}${z.name}</button>`).join('')}</div>
     </div>
     <div class="section">
-      <h2>${ic('hangout', 'm')}Friends</h2>
+      <h2><button class="hd h2btn" data-act="sayLabel">${ic('hangout', 'm')}Friends${ic('speaker', 'xs')}</button></h2>
       <p>Names and interests fill in Hi, Ask and More.</p>
       ${friends}
       <button class="small" data-act="friendAdd">${ic('plus', 's')}Add friend</button>
     </div>
     <div class="section">
-      <h2>${ic('ticket', 'm')}Topics for group talk</h2>
+      <h2><button class="hd h2btn" data-act="sayLabel">${ic('ticket', 'm')}Topics for group talk${ic('speaker', 'xs')}</button></h2>
       <p>Add what your friends talk about. Weekend, Games, Music, Sports, Food, Shows and School are always there.</p>
       ${topics}
       <button class="small" data-act="topicAdd">${ic('plus', 's')}Add topic</button>
     </div>
     <div class="section">
-      <h2>${ic('chat', 'm')}My phrases</h2>
+      <h2><button class="hd h2btn" data-act="sayLabel">${ic('chat', 'm')}My phrases${ic('speaker', 'xs')}</button></h2>
       <p>Phrases you add with the Add button on a move page show up here.</p>
       ${own || note('No phrases yet. Open a move, tap more, then Add.')}
     </div>
     <div class="section">
-      <h2>${ic('qr', 'm')}Talk card</h2>
+      <h2><button class="hd h2btn" data-act="sayLabel">${ic('qr', 'm')}Talk card${ic('speaker', 'xs')}</button></h2>
       <p>Show this to new friends so they know how to talk with you.</p>
       ${cardRows}
       <div class="flexrow" style="flex-wrap:wrap">
@@ -825,7 +906,7 @@ function viewSetup() {
       </div>
     </div>
     <div class="section">
-      <h2>${ic('savecheck', 'm')}Saving and backup</h2>
+      <h2><button class="hd h2btn" data-act="sayLabel">${ic('savecheck', 'm')}Saving and backup${ic('speaker', 'xs')}</button></h2>
       <p>${esc(storeNote)}</p>
       <div class="flexrow" style="flex-wrap:wrap">
         <button class="small accent" data-act="backup">${ic('send', 's')}Back up my settings</button>
@@ -855,7 +936,7 @@ async function onRestore(ev) {
     const data = JSON.parse(await file.text());
     if (!data || data.app !== 'jump-in' || !data.profile) throw new Error('not a backup');
     S.profile = upgradeProfile(data.profile); S.news = Array.isArray(data.news) ? data.news : [];
-    afterLoad(); applyTextSize(); await saveProfile(true);
+    afterLoad(); applyTheme(); applyTextSize(); await saveProfile(true);
     S.backupMsg = 'Restored. Everything from the backup is back.'; S.backupErr = false; speakButton('Restored');
   } catch (e) { S.backupMsg = 'That file is not a Jump In backup.'; S.backupErr = true; speakButton(S.backupMsg); }
   renderStatus(); render();
@@ -889,21 +970,21 @@ function renderLayer() {
     const m = MOVES.find(x => x.id === S.pageMove);
     const secs = movePage(m.id);
     const f = friend();
-    const body = secs.map((sec, si) => `<div class="label">${ic(sec.icon, 's')}${esc(sec.title)}${si === 0 && f ? ' with ' + esc(f.name) : ''}</div>
+    const body = secs.map((sec, si) => `<button class="label hd" data-act="sayLabel">${ic(sec.icon, 's')}${esc(sec.title)}${si === 0 && f ? ' with ' + esc(f.name) : ''}${ic('speaker', 'xs')}</button>
       <div class="ptiles">${sec.phrases.map((ph, i) => `<div class="ptwrap">
-        <button class="ptile" data-act="pageSay" data-s="${si}" data-i="${i}"><span class="icons">${ph.words.slice(0, 2).map(w => ic(w.icon)).join('')}</span><span>${esc(ph.text)}</span></button>
+        <button class="ptile" data-act="pageSay" data-s="${si}" data-i="${i}">${phraseIcon(ph)}<span>${esc(ph.text)}</span></button>
         ${sec.custom && S.pageEdit ? `<button class="small danger" data-act="customDelete" data-i="${i}" data-say="Remove ${esc(ph.text)}">${ic('no', 's')}Remove</button>` : ''}
       </div>`).join('')}</div>`).join('');
     const d = S.draft;
     el.innerHTML = `<div class="page" role="dialog" aria-modal="true" aria-label="${esc(m.name)}">
       <div class="page-head">
         <button class="small" data-act="closeLayer">${ic('bye', 's')}Back</button>
-        <h2>${ic(m.icon, 'm')}${esc(m.name)}</h2>
+        <h2><button class="hd h2btn" data-act="sayLabel">${ic(m.icon, 'm')}${esc(m.name)}${ic('speaker', 'xs')}</button></h2>
         <button class="small" data-act="pageEditToggle">${S.pageEdit ? ic('done', 's') + 'Done' : ic('plus', 's') + 'Add'}</button>
       </div>
       <div id="pageSaid">${document.getElementById('said').innerHTML}</div>
       ${S.pageEdit ? `<div class="sub">
-        <div class="label">${ic('me', 's')}Add my own ${esc(m.name)} phrase</div>
+        <button class="label hd" data-act="sayLabel">${ic('me', 's')}Add my own ${esc(m.name)} phrase${ic('speaker', 'xs')}</button>
         <div class="flexrow">
           <button class="iconbtn" data-act="draftIcon" data-say="Pick a picture">${ic(d.icon)}picture</button>
           <input class="input" data-bind="draft.text" value="${esc(d.text)}" placeholder="Something I say" aria-label="New phrase">
@@ -920,7 +1001,7 @@ function renderLayer() {
   }
   if (S.layer === 'picker') {
     el.innerHTML = `<div class="overlay" data-act="closeLayerBg"><div class="sheet" role="dialog" aria-modal="true" aria-label="Pick a picture">
-      <div class="sheet-head"><h2>Pick a picture</h2><button class="small" data-act="closeLayer">${ic('no', 's')}Cancel</button></div>
+      <div class="sheet-head"><h2><button class="hd h2btn" data-act="sayLabel">Pick a picture${ic('speaker', 'xs')}</button></h2><button class="small" data-act="closeLayer">${ic('no', 's')}Cancel</button></div>
       <div class="picker">${PICKABLE.map(k => `<button class="tile" data-act="pick" data-k="${k}">${ic(k, 'l')}${esc(LABELS[k])}</button>`).join('')}</div>
     </div></div>`;
     return;
@@ -929,7 +1010,7 @@ function renderLayer() {
     const e = S.editor;
     const canPhoto = sampleFn && sampleImages && !sampleOff && e.file;
     el.innerHTML = `<div class="overlay"><div class="sheet" role="dialog" aria-modal="true" aria-label="News">
-      <div class="sheet-head"><h2>${e.id ? 'Edit news' : 'Add news'}</h2><button class="small" data-act="closeLayer">${ic('no', 's')}Cancel</button></div>
+      <div class="sheet-head"><h2><button class="hd h2btn" data-act="sayLabel">${e.id ? 'Edit news' : 'Add news'}${ic('speaker', 'xs')}</button></h2><button class="small" data-act="closeLayer">${ic('no', 's')}Cancel</button></div>
       <label class="card" style="cursor:pointer;border-style:dashed;border-color:var(--line)" for="photoIn" role="button" tabindex="0" data-say="${e.photo ? 'Change photo' : 'Take or choose a photo'}">
         <span class="photo" style="${photoStyle(e)}">${e.photo ? '' : ic('camera', 'l')}</span>
         <span class="body"><b>${e.photo ? 'Change photo' : 'Take or choose a photo'}</b><span class="note">From your day or weekend</span></span>
@@ -939,7 +1020,7 @@ function renderLayer() {
       ${canPhoto ? `<button class="small accent" data-act="photoSuggest" ${e.busy ? 'disabled' : ''}>${e.busy ? '<span class="spinner"></span>Thinking...' : ic('idea', 's') + 'Suggest words'}</button>` : ''}
       ${e.msg ? note(e.msg, e.msgErr) : ''}
       <div class="field"><label class="label" for="e-sentence">${ic('speaker', 's')}What I will say</label><input class="input" id="e-sentence" data-bind="editor.sentence" value="${esc(e.sentence)}" placeholder="I went to a soccer game. We won!"></div>
-      <div class="label">${ic('picture', 's')}Pictures for it</div>
+      <button class="label hd" data-act="sayLabel">${ic('picture', 's')}Pictures for it${ic('speaker', 'xs')}</button>
       <div class="wordsrow">${e.words.map((w, i) => `<span class="sub" style="padding:6px;align-items:center;gap:4px">${ic(w.icon, 'l')}
           <input class="input" style="width:112px" data-bind="editor.word" data-i="${i}" value="${esc(w.label)}" aria-label="Word">
           <button class="small danger" data-act="wordDelete" data-i="${i}">${ic('no', 's')}Remove</button></span>`).join('')}
@@ -1036,11 +1117,13 @@ const actions = {
   react(t) { const r = REACTIONS[Number(t.dataset.i)]; say({ text: r.text, words: [{ icon: r.icon, label: r.label }] }); },
   join(t) { const tp = allTopics().find(x => x.id === S.topicId); const p = tp && tp.phrases[Number(t.dataset.i)]; if (p) say(p); },
   newsSay(t) { const item = S.news.find(n => n.id === t.dataset.id); if (!item) return; S.newsPick = item.id; say({ text: item.sentence, words: item.words }); render(); },
+  sayLabel() {},
   askBack() { say(P('What did you do?', ['do', 'qmark'])); },
   groupAsk(t) { const p = GROUP_ASK[Number(t.dataset.i)]; if (p) say(p); },
   newsFollow(t) { const p = NEWS_FOLLOW[Number(t.dataset.i)]; if (p) say(p); },
   toggleSpeakButtons() { const st = S.profile.settings; st.speakButtons = !st.speakButtons; scheduleSave(); render(); speak(`Say every button out loud, ${st.speakButtons ? 'on' : 'off'}`); return ''; },
-  textSize(t) { S.profile.settings.textSize = Number(t.dataset.v); applyTextSize(); scheduleSave(); render(); },
+  theme(t) { S.profile.settings.theme = t.dataset.v; applyTheme(); scheduleSave(); render(); renderLayer(); },
+  textSize(t) { S.profile.settings.textSize = Number(t.dataset.v); applyTheme(); applyTextSize(); scheduleSave(); render(); },
   ownDelete(t) { const list = S.profile.custom[t.dataset.m]; if (!list) return; list.splice(Number(t.dataset.i), 1); scheduleSave(); render(); },
   cardIcon(t) { openPicker(k => { const c = S.profile.card[Number(t.dataset.i)]; if (c) { c.icon = k; scheduleSave(); } render(); }); },
   cardAdd() { S.profile.card.push({ icon: 'idea', text: '' }); scheduleSave(); render(); },
@@ -1200,7 +1283,7 @@ document.addEventListener('change', ev => {
 });
 
 document.getElementById('brandIcon').src = ICON.wave;
-applyTextSize();
+applyTheme(); applyTextSize();
 render();
 renderStatus();
 initStore();
