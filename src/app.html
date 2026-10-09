@@ -493,7 +493,7 @@ function renderStatus() {
   el.innerHTML = `${ic(icon, 's')}<span>${esc(text)}</span>`;
 }
 
-/* ---------- Claude suggestions ---------- */
+/* ---------- AI suggestions (Claude in the artifact, OpenAI via /api/suggest when hosted) ---------- */
 let sampleFn = null, sampleImages = false, sampleOff = false;
 (async () => {
   try {
@@ -527,10 +527,10 @@ const serverSample = {
 function iconListForPrompt() { return PICKABLE.map(k => `${k} (${LABELS[k]})`).join(', '); }
 function sampleErrorText(e) {
   const code = e && e.code;
-  if (['not_granted', 'sampling_disabled', 'not_declared', 'capability_disabled', 'capability_removed'].includes(code)) { sampleOff = true; return 'Claude suggestions are turned off here, so add the words yourself.'; }
+  if (['not_granted', 'sampling_disabled', 'not_declared', 'capability_disabled', 'capability_removed'].includes(code)) { sampleOff = true; return 'Suggestions are turned off here, so add the words yourself.'; }
   if (code === 'rate_limited') return 'Too many requests right now. Try again in a minute.';
   if (code === 'image_rejected') return 'That photo could not be read. Try another one.';
-  if (code === 'refused') return 'Claude could not help with that one. Add the words yourself.';
+  if (code === 'refused') return 'No suggestion for that one. Add the words yourself.';
   return 'Could not get suggestions. Try again.';
 }
 function cleanWords(arr) {
@@ -681,7 +681,7 @@ function viewSetup() {
       </div>`).join('')}
       <div class="flexrow" style="flex-wrap:wrap">
         <button class="small" data-act="phraseAdd" data-id="${esc(t.id)}">${ic('plus', 's')}Add phrase</button>
-        ${canSuggest ? `<button class="small accent" data-act="topicSuggest" data-id="${esc(t.id)}" ${S.topicBusy === t.id ? 'disabled' : ''}>${S.topicBusy === t.id ? '<span class="spinner"></span>Thinking...' : ic('idea', 's') + 'Suggest with Claude'}</button>` : ''}
+        ${canSuggest ? `<button class="small accent" data-act="topicSuggest" data-id="${esc(t.id)}" ${S.topicBusy === t.id ? 'disabled' : ''}>${S.topicBusy === t.id ? '<span class="spinner"></span>Thinking...' : ic('idea', 's') + 'Suggest phrases'}</button>` : ''}
         <button class="small danger" data-act="topicDelete" data-id="${esc(t.id)}">${ic('no', 's')}Remove topic</button>
       </div>
       ${S.topicMsg[t.id] ? note(S.topicMsg[t.id], true) : ''}
@@ -812,7 +812,7 @@ function renderLayer() {
       </label>
       <input type="file" id="photoIn" class="vh" accept="image/*">
       <div class="field"><label class="label" for="e-note">${ic('question', 's')}What happened? A helper can type a few words.</label><input class="input" id="e-note" data-bind="editor.note" value="${esc(e.note)}" placeholder="soccer game, we won"></div>
-      ${canPhoto ? `<button class="small accent" data-act="photoSuggest" ${e.busy ? 'disabled' : ''}>${e.busy ? '<span class="spinner"></span>Thinking...' : ic('idea', 's') + 'Suggest words with Claude'}</button>` : ''}
+      ${canPhoto ? `<button class="small accent" data-act="photoSuggest" ${e.busy ? 'disabled' : ''}>${e.busy ? '<span class="spinner"></span>Thinking...' : ic('idea', 's') + 'Suggest words'}</button>` : ''}
       ${e.msg ? note(e.msg, e.msgErr) : ''}
       <div class="field"><label class="label" for="e-sentence">${ic('speaker', 's')}What I will say</label><input class="input" id="e-sentence" data-bind="editor.sentence" value="${esc(e.sentence)}" placeholder="I went to a soccer game. We won!"></div>
       <div class="label">${ic('picture', 's')}Pictures for it</div>

@@ -10,10 +10,10 @@ It runs in the phone's browser, talks out loud with the phone's own voice, and c
 - **Talk**: six conversation moves (Hi, React, My news, Ask, More, Bye) that fill in from the place, the friend and the day. The next move glows. Each move has a **more** button that opens a full page of choices, and the teen can add their own phrases there.
 - **Yes / No / Maybe / Say again?** quick answers, **Hold on**, and **Show friends** (big pictures to turn the phone around).
 - **Group**: pick what friends are talking about, then react or join in.
-- **News**: photos from the teen's day with a sentence and pictographs. Claude can suggest the words from the photo.
+- **News**: photos from the teen's day with a sentence and pictographs. AI can suggest the words from the photo.
 - **Setup**: name, voice and speed, friends and their interests, topics, and a talk card for new friends.
 
-Everything the teen sets up is saved on that phone (browser storage). Nothing is sent anywhere except a photo or topic name when someone taps **Suggest with Claude**.
+Everything the teen sets up is saved on that phone (browser storage). Nothing is sent anywhere except a photo or topic name when someone taps **Suggest words** or **Suggest phrases**.
 
 ## Project layout
 
@@ -23,7 +23,7 @@ Everything the teen sets up is saved on that phone (browser storage). Nothing is
 | `src/pictographs/` | The pictograph SVGs (placeholder set). |
 | `build.js` | Puts the pictographs into the app and writes `public/index.html`. |
 | `public/` | What the server sends to phones: the built app, home-screen icons, offline support. |
-| `server.js` | A small Node server with no dependencies. Serves `public/` and the `/api/suggest` route that calls Claude. |
+| `server.js` | A small Node server with no dependencies. Serves `public/` and the `/api/suggest` route that calls the OpenAI API. |
 | `render.yaml` | Tells Render how to build and run the app. |
 
 ## Run it on your computer
@@ -34,13 +34,13 @@ Needs Node 20 or newer.
 npm run dev
 ```
 
-Then open http://localhost:3000. Claude suggestions stay hidden unless you set `ANTHROPIC_API_KEY` first.
+Then open http://localhost:3000. Suggestions stay hidden unless you set `OPENAI_API_KEY` first.
 
 ## Put it on Render
 
 1. In Render, click **New +** and choose **Blueprint**.
 2. Connect your GitHub account if asked, then pick the **jump-in** repo. Render reads `render.yaml` and sets up a web service called jump-in.
-3. Render asks for **ANTHROPIC_API_KEY**. Paste a key from https://console.anthropic.com (Settings, API keys) to turn on Claude suggestions, or leave it blank to run without them.
+3. Render asks for **OPENAI_API_KEY**. Paste a key from https://platform.openai.com/api-keys to turn on suggestions, or leave it blank to run without them.
 4. Click **Apply**. The first build takes a few minutes. Your link will look like `https://jump-in.onrender.com`.
 
 Every push to the main branch redeploys automatically.
@@ -51,9 +51,9 @@ The free Render plan goes to sleep after about 15 minutes with no visitors, so t
 
 | Name | What it does | Default |
 | --- | --- | --- |
-| `ANTHROPIC_API_KEY` | Turns on Claude suggestions | not set (off) |
-| `ANTHROPIC_MODEL` | Model for photo and topic suggestions | `claude-sonnet-5-5` |
-| `ANTHROPIC_QUICK_MODEL` | Model for quick topic phrases | `claude-haiku-5-5` |
+| `OPENAI_API_KEY` | Turns on photo and topic suggestions | not set (off) |
+| `OPENAI_MODEL` | Model for photo and topic suggestions (must accept images) | `gpt-4o-mini` |
+| `OPENAI_QUICK_MODEL` | Model for quick topic phrases | same as `OPENAI_MODEL` |
 | `SUGGEST_LIMIT_PER_HOUR` | Suggestions allowed per visitor per hour, so a shared link can't run up your bill | `40` |
 
 ## Put it on an iPhone
