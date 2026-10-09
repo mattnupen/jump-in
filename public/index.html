@@ -34,8 +34,9 @@
   --font-body: 'DM Sans', -apple-system, 'Segoe UI', sans-serif;
   color-scheme: dark;
 }
+html { font-size: 100%; -webkit-text-size-adjust: 100%; }
 html, body { height: 100%; }
-body { background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 16px; -webkit-tap-highlight-color: transparent; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 1.0625rem; -webkit-tap-highlight-color: transparent; }
 * { box-sizing: border-box; }
 button, input, select { font: inherit; color: inherit; }
 button { cursor: pointer; }
@@ -49,8 +50,8 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 #app { max-width: 480px; margin: 0 auto; min-height: 100%; display: flex; flex-direction: column; }
 .top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); padding: 10px 16px 8px; display: flex; flex-direction: column; gap: 8px; }
 .brand { display: flex; align-items: center; gap: 8px; }
-.brand b { font-family: var(--font-display); font-weight: 800; font-size: 22px; letter-spacing: -0.3px; }
-.status { margin-left: auto; font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 6px; }
+.brand b { font-family: var(--font-display); font-weight: 800; font-size: 1.375rem; letter-spacing: -0.3px; }
+.status { margin-left: auto; font-size: 0.875rem; color: var(--muted); display: flex; align-items: center; gap: 6px; }
 .dot { width: 8px; height: 8px; border-radius: 4px; background: var(--muted); }
 .dot.ok { background: var(--accent); }
 .dot.warn { background: var(--warn); }
@@ -58,57 +59,59 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .said { display: flex; align-items: center; gap: 8px; background: var(--surface); border-radius: 18px; padding: 6px 6px 6px 8px; min-height: 64px; }
 .said.hold { background: #3A3216; outline: 2px solid var(--warn); }
 .said .words { display: flex; gap: 4px; overflow: hidden; flex: 1; min-width: 0; align-items: center; }
-.said .empty { color: var(--muted); font-size: 14px; display: flex; align-items: center; gap: 8px; }
-.said .text { font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.said .empty { color: var(--muted); font-size: 1rem; display: flex; align-items: center; gap: 8px; }
+.said .text { font-size: 0.875rem; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .word { display: flex; flex-direction: column; align-items: center; min-width: 44px; flex-shrink: 0; }
-.word span { font-size: 11px; font-weight: 700; white-space: nowrap; }
-.roundbtn { width: 48px; height: 48px; border-radius: 24px; border: none; background: var(--surface-2); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.word span { font-size: 0.8125rem; font-weight: 700; white-space: nowrap; }
+.roundbtn { min-width: 56px; min-height: 56px; padding: 4px 6px; border-radius: 16px; border: none; background: var(--surface-2); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; flex-shrink: 0; font-size: 0.8125rem; font-weight: 700; }
+.roundbtn .ic { width: 28px; height: 28px; }
 
 main { flex: 1; padding: 4px 16px calc(96px + env(safe-area-inset-bottom, 0px)); display: flex; flex-direction: column; gap: 12px; }
 .row { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
 .row::-webkit-scrollbar { display: none; }
-.chip { height: 48px; padding: 0 14px 0 6px; border-radius: 24px; border: 2px solid transparent; background: var(--surface); display: flex; align-items: center; gap: 6px; white-space: nowrap; font-weight: 500; font-size: 15px; flex-shrink: 0; }
+.chip { min-height: 48px; padding: 0 14px 0 6px; border-radius: 24px; border: 2px solid transparent; background: var(--surface); display: flex; align-items: center; gap: 6px; white-space: nowrap; font-weight: 500; font-size: 1.0625rem; flex-shrink: 0; }
 .chip.on { background: var(--accent-soft); border-color: var(--accent); font-weight: 700; }
-.label { font-size: 13px; color: var(--muted); display: flex; align-items: center; gap: 6px; }
+.label { font-size: 0.9375rem; color: var(--muted); display: flex; align-items: center; gap: 6px; }
 .avatar { width: 34px; height: 34px; border-radius: 17px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .avatar .ic { width: 26px; height: 26px; }
 
 .moves { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
 .movewrap { position: relative; display: flex; }
-.movewrap .move { flex: 1; width: 100%; min-height: 150px; padding-bottom: 46px; justify-content: flex-start; }
-.morebtn { position: absolute; right: 8px; bottom: 8px; height: 30px; padding: 0 9px 0 5px; border-radius: 15px; border: 1.5px solid var(--line); background: var(--bg); display: flex; align-items: center; gap: 3px; font-size: 12px; font-weight: 700; color: var(--muted); }
+.movewrap .move { flex: 1; width: 100%; min-height: 160px; padding-bottom: 56px; justify-content: flex-start; }
+.morebtn { position: absolute; right: 6px; bottom: 6px; height: 44px; min-width: 44px; padding: 0 12px 0 8px; border-radius: 22px; border: 1.5px solid var(--line); background: var(--bg); display: flex; align-items: center; gap: 3px; font-size: 0.875rem; font-weight: 700; color: var(--muted); }
 .yesno { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
-.yesno .tile { min-height: 64px; font-size: 12px; }
+.yesno .tile { min-height: 64px; font-size: 0.875rem; }
 .page { position: fixed; inset: 0; z-index: 25; background: var(--bg); overflow-y: auto; padding: calc(12px + env(safe-area-inset-top, 0px)) 16px calc(24px + env(safe-area-inset-bottom, 0px)); display: flex; flex-direction: column; gap: 12px; }
 .page-head { position: sticky; top: calc(-12px - env(safe-area-inset-top, 0px)); z-index: 2; background: var(--bg); margin: -12px -16px 0; padding: 12px 16px 8px; display: flex; align-items: center; gap: 10px; }
-.page-head h2 { margin: 0; flex: 1; font-family: var(--font-display); font-weight: 800; font-size: 26px; display: flex; align-items: center; gap: 8px; }
+.page-head h2 { margin: 0; flex: 1; font-family: var(--font-display); font-weight: 800; font-size: 1.625rem; display: flex; align-items: center; gap: 8px; }
 .ptiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
-.ptile { position: relative; min-height: 76px; border-radius: 18px; border: none; background: var(--surface); display: flex; align-items: center; gap: 8px; padding: 8px 10px 8px 8px; text-align: left; font-weight: 700; font-size: 15px; line-height: 1.2; }
+.ptile { position: relative; min-height: 76px; border-radius: 18px; border: none; background: var(--surface); display: flex; align-items: center; gap: 8px; padding: 8px 10px 8px 8px; text-align: left; font-weight: 700; font-size: 1.0625rem; line-height: 1.2; }
 .ptile:active { transform: scale(0.97); }
 .ptile .icons { display: flex; flex-direction: column; gap: 2px; flex-shrink: 0; }
 .ptile .icons .ic { width: 32px; height: 32px; }
-.x { position: absolute; z-index: 1; top: -6px; right: -6px; width: 30px; height: 30px; border-radius: 15px; border: none; background: var(--danger); display: flex; align-items: center; justify-content: center; }
+.ptwrap { display: flex; flex-direction: column; gap: 6px; }
+.ptwrap .ptile { flex: 1; }
 .move { position: relative; min-height: 118px; border-radius: 22px; border: 3px solid transparent; background: var(--surface); padding: 10px 12px; display: flex; flex-direction: column; justify-content: space-between; gap: 6px; text-align: left; transition: transform .08s; }
 .move:active, .tile:active, .chip:active, .join:active { transform: scale(0.97); }
 .move.next { background: var(--accent-soft); border-color: var(--accent); }
 .move .head { display: flex; align-items: center; gap: 8px; width: 100%; }
-.move .name { font-family: var(--font-display); font-weight: 800; font-size: 20px; }
-.badge { position: absolute; top: -11px; right: 12px; background: var(--accent); color: var(--accent-ink); font-size: 11px; font-weight: 800; padding: 2px 7px 2px 3px; border-radius: 9px; letter-spacing: 0.5px; display: flex; align-items: center; gap: 2px; }
+.move .name { font-family: var(--font-display); font-weight: 800; font-size: 1.25rem; }
+.badge { position: absolute; top: -12px; right: 12px; background: var(--accent); color: var(--accent-ink); font-size: 0.8125rem; font-weight: 800; padding: 2px 7px 2px 3px; border-radius: 9px; letter-spacing: 0.5px; display: flex; align-items: center; gap: 2px; }
 .ic.xs { width: 16px; height: 16px; }
 .vh { position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden; pointer-events: none; }
-.move .phrase { font-size: 13px; color: #D3DCDF; line-height: 1.3; }
+.move .phrase { font-size: 0.9375rem; color: #D3DCDF; line-height: 1.3; }
 
 .alts { background: var(--surface); border-radius: 20px; padding: 10px; display: flex; flex-direction: column; gap: 8px; }
-.join { min-height: 58px; border-radius: 18px; border: none; background: var(--surface-2); display: flex; align-items: center; gap: 8px; padding: 6px 12px 6px 8px; text-align: left; font-weight: 700; font-size: 16px; width: 100%; }
+.join { min-height: 58px; border-radius: 18px; border: none; background: var(--surface-2); display: flex; align-items: center; gap: 8px; padding: 6px 12px 6px 8px; text-align: left; font-weight: 700; font-size: 1.0625rem; width: 100%; }
 .join .icons { display: flex; gap: 2px; }
 .quick { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
-.big { min-height: 58px; border-radius: 18px; border: 2px solid var(--line); background: var(--surface); display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 700; font-size: 16px; padding: 0 10px; }
+.big { min-height: 58px; border-radius: 18px; border: 2px solid var(--line); background: var(--surface); display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 700; font-size: 1.0625rem; padding: 0 10px; }
 .big.warn { border-color: var(--warn); }
 .big.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
 .big.wide { width: 100%; }
 
 .reactions { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
-.tile { min-height: 78px; border-radius: 18px; border: none; background: var(--surface); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; font-weight: 700; font-size: 13px; padding: 4px; }
+.tile { min-height: 78px; border-radius: 18px; border: none; background: var(--surface); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; font-weight: 700; font-size: 0.9375rem; padding: 4px; }
 
 .news { display: flex; flex-direction: column; gap: 10px; }
 .card { border-radius: 22px; border: 3px solid transparent; background: var(--surface); padding: 8px; display: flex; gap: 10px; align-items: center; text-align: left; width: 100%; }
@@ -117,50 +120,61 @@ main { flex: 1; padding: 4px 16px calc(96px + env(safe-area-inset-bottom, 0px));
 .card .body { display: flex; flex-direction: column; gap: 6px; min-width: 0; flex: 1; }
 .wordsrow { display: flex; gap: 4px; flex-wrap: wrap; }
 .wordsrow .word { background: var(--surface-2); border-radius: 10px; padding: 3px 4px; }
-.card .sentence { font-size: 14px; color: #D3DCDF; }
+.card .sentence { font-size: 1rem; color: #D3DCDF; }
 .edit-row { display: flex; gap: 8px; }
-.small { height: 44px; padding: 0 14px; border-radius: 14px; border: 1.5px solid var(--line); background: transparent; font-size: 14px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; }
+.small { min-height: 44px; padding: 0 14px; border-radius: 14px; border: 1.5px solid var(--line); background: transparent; font-size: 1rem; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; }
 .small.danger { color: var(--danger); border-color: #5A3A36; }
 .small.accent { border-color: var(--accent); color: var(--accent); }
 
 .section { background: var(--surface); border-radius: 22px; padding: 14px; display: flex; flex-direction: column; gap: 12px; }
-.section h2 { margin: 0; font-family: var(--font-display); font-weight: 800; font-size: 20px; display: flex; align-items: center; gap: 8px; text-wrap: balance; }
-.section p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.45; }
+.section h2 { margin: 0; font-family: var(--font-display); font-weight: 800; font-size: 1.25rem; display: flex; align-items: center; gap: 8px; text-wrap: balance; }
+.section p { margin: 0; color: var(--muted); font-size: 1rem; line-height: 1.45; }
 .field { display: flex; flex-direction: column; gap: 6px; }
-.field label { font-size: 13px; color: var(--muted); }
-.input { height: 48px; border-radius: 14px; border: 1.5px solid var(--line); background: var(--bg); padding: 0 12px; font-size: 16px; width: 100%; min-width: 0; }
+.field label { font-size: 0.9375rem; color: var(--muted); }
+.input { min-height: 48px; border-radius: 14px; border: 1.5px solid var(--line); background: var(--bg); padding: 0 12px; font-size: 1.0625rem; width: 100%; min-width: 0; }
 select.input { padding-right: 8px; }
-input[type=range] { width: 100%; accent-color: var(--accent); height: 32px; }
+input[type=range] { width: 100%; accent-color: var(--accent); height: 44px; }
+.input::placeholder { color: #9BA8AF; opacity: 1; }
+.seg { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+.seg button { min-height: 56px; border-radius: 14px; border: 2px solid var(--line); background: transparent; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-weight: 700; }
+.seg button.on { border-color: var(--accent); background: var(--accent-soft); }
+.switch { min-height: 56px; width: 100%; border-radius: 16px; border: 2px solid var(--line); background: transparent; display: flex; align-items: center; gap: 10px; padding: 6px 12px 6px 8px; text-align: left; font-weight: 700; }
+.switch .knob { margin-left: auto; width: 52px; height: 32px; border-radius: 16px; background: #4A5961; position: relative; flex-shrink: 0; }
+.switch .knob::after { content: ''; position: absolute; top: 3px; left: 3px; width: 26px; height: 26px; border-radius: 13px; background: #F4F4F0; transition: left .15s; }
+.switch.on { border-color: var(--accent); }
+.switch.on .knob { background: var(--accent); }
+.switch.on .knob::after { left: 23px; background: var(--accent-ink); }
+.switch .state { font-size: 0.9375rem; color: var(--muted); }
 .sub { background: var(--bg); border-radius: 16px; padding: 10px; display: flex; flex-direction: column; gap: 10px; }
 .flexrow { display: flex; gap: 8px; align-items: center; }
 .toggles { display: flex; gap: 6px; flex-wrap: wrap; }
-.tog { height: 44px; padding: 0 10px 0 4px; border-radius: 22px; border: 2px solid var(--line); background: transparent; display: flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 500; }
+.tog { min-height: 44px; padding: 0 10px 0 4px; border-radius: 22px; border: 2px solid var(--line); background: transparent; display: flex; align-items: center; gap: 4px; font-size: 0.9375rem; font-weight: 500; }
 .tog.on { border-color: var(--accent); background: var(--accent-soft); font-weight: 700; }
-.iconbtn { width: 48px; height: 48px; border-radius: 14px; border: 1.5px dashed var(--line); background: var(--surface-2); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-.note { font-size: 13px; color: var(--muted); }
+.iconbtn { min-width: 64px; min-height: 64px; padding: 4px; border-radius: 14px; border: 1.5px dashed #5B6B74; background: var(--surface-2); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; flex-shrink: 0; font-size: 0.8125rem; font-weight: 700; }
+.iconbtn .ic { width: 32px; height: 32px; }
+.note { font-size: 0.9375rem; color: var(--muted); }
 .note.err { color: var(--danger); }
-.banner { background: #22301F; border: 1.5px solid #4C6A3E; border-radius: 14px; padding: 6px 10px; font-size: 13px; display: flex; gap: 10px; align-items: center; line-height: 1.4; }
 
 .tabs { position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; background: #12181B; border-top: 1px solid var(--surface-2); padding: 6px 8px calc(6px + env(safe-area-inset-bottom, 0px)); }
 .tabs .inner { max-width: 480px; margin: 0 auto; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px; }
-.tab { height: 62px; border: none; border-radius: 16px; background: transparent; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 12px; font-weight: 700; color: var(--muted); }
+.tab { min-height: 62px; border: none; border-radius: 16px; background: transparent; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 0.875rem; font-weight: 700; color: var(--muted); }
 .tab.on { background: var(--accent-soft); color: var(--fg); }
 .tab .ic { width: 30px; height: 30px; }
 
 .overlay { position: fixed; inset: 0; z-index: 20; background: rgba(5, 8, 9, 0.7); display: flex; align-items: flex-end; justify-content: center; }
 .sheet { width: 100%; max-width: 480px; max-height: 92%; overflow-y: auto; background: var(--bg); border-radius: 26px 26px 0 0; padding: 14px 16px calc(20px + env(safe-area-inset-bottom, 0px)); display: flex; flex-direction: column; gap: 12px; border-top: 1px solid var(--surface-2); }
 .sheet-head { display: flex; align-items: center; gap: 10px; }
-.sheet-head h2 { margin: 0; font-family: var(--font-display); font-weight: 800; font-size: 22px; flex: 1; }
+.sheet-head h2 { margin: 0; font-family: var(--font-display); font-weight: 800; font-size: 1.375rem; flex: 1; }
 .picker { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
 .show { position: fixed; inset: 0; z-index: 30; background: var(--accent); color: var(--accent-ink); overflow-y: auto; padding: calc(16px + env(safe-area-inset-top, 0px)) 20px calc(24px + env(safe-area-inset-bottom, 0px)); display: flex; flex-direction: column; gap: 16px; }
 .show .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
 .show .cell.solo { grid-column: 1 / -1; min-height: 200px; }
-.show .cell { min-height: 150px; border-radius: 24px; background: var(--accent-ink); color: var(--fg); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; font-weight: 800; font-size: 20px; text-align: center; padding: 8px; }
-.show .sentence { font-family: var(--font-display); font-weight: 800; font-size: 30px; line-height: 1.15; text-wrap: balance; }
-.show .tip { margin-top: auto; display: flex; gap: 10px; align-items: center; background: rgba(14,18,20,0.12); border-radius: 18px; padding: 10px 12px; font-size: 16px; line-height: 1.35; }
-.show .closer { align-self: flex-start; height: 48px; padding: 0 16px; border-radius: 24px; border: none; background: var(--accent-ink); color: var(--fg); font-weight: 700; display: flex; align-items: center; gap: 8px; }
+.show .cell { min-height: 150px; border-radius: 24px; background: var(--accent-ink); color: var(--fg); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; font-weight: 800; font-size: 1.25rem; text-align: center; padding: 8px; }
+.show .sentence { font-family: var(--font-display); font-weight: 800; font-size: 1.875rem; line-height: 1.15; text-wrap: balance; }
+.show .tip { margin-top: auto; display: flex; gap: 10px; align-items: center; background: rgba(14,18,20,0.12); border-radius: 18px; padding: 10px 12px; font-size: 1.0625rem; line-height: 1.35; }
+.show .closer { align-self: flex-start; min-height: 48px; padding: 0 16px; border-radius: 24px; border: none; background: var(--accent-ink); color: var(--fg); font-weight: 700; display: flex; align-items: center; gap: 8px; }
 .card-tips { display: flex; flex-direction: column; gap: 10px; }
-.card-tips div { display: flex; gap: 12px; align-items: center; font-size: 18px; font-weight: 500; }
+.card-tips div { display: flex; gap: 12px; align-items: center; font-size: 1.125rem; font-weight: 500; }
 .card-tips .ic { background: var(--accent-ink); border-radius: 10px; padding: 3px; width: 44px; height: 44px; }
 .spinner { width: 18px; height: 18px; border-radius: 9px; border: 3px solid var(--line); border-top-color: var(--accent); animation: spin 0.8s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
@@ -251,12 +265,22 @@ const BUILTIN_TOPICS = [
 ];
 const FRIEND_COLORS = ['#B39CFF', '#F2A5C8', '#6FB8FF', '#FF8A3D', '#5ED38C', '#F7C948'];
 const HOLD = P('Hold on, I have something to say!', ['holdon']);
+const GROUP_ASK = [P('What are you talking about?', ['chat', 'qmark']), P('Can I see?', ['watch', 'qmark']), P('What happened?', ['confused', 'qmark']), P('Can I play too?', ['gaming', 'qmark']), P('My turn!', ['myturn']), P('Wait for me!', ['wait'])];
+const NEWS_FOLLOW = [P('It was so fun!', ['excited']), P('Want to see a picture?', ['picture', 'qmark']), P('What about you?', ['you', 'qmark']), P('I want to go again!', ['again', 'want'])];
 
-function exampleData() {
-  const day = 86400000;
+const DEFAULT_CARD = [
+  { icon: 'picture', text: 'I talk with pictures on my phone.' },
+  { icon: 'holdon', text: 'Give me a few seconds to answer.' },
+  { icon: 'yes', text: 'Yes or no questions are quick for me.' },
+  { icon: 'smile', text: 'Talk to me like you talk to anyone.' },
+  { icon: 'hangout', text: 'Ask me about my news. I love to share.' }
+];
+const DEFAULT_SETTINGS = { speakButtons: true, textSize: 1 };
+function defaultData() {
   return {
     profile: {
-      v: 1, isExample: true, name: 'Maya', voiceURI: '', rate: 1,
+      v: 2, name: 'Rori', voiceURI: '', rate: 1,
+      settings: Object.assign({}, DEFAULT_SETTINGS), card: DEFAULT_CARD.map(c => Object.assign({}, c)), custom: {},
       friends: [
         { id: 'f1', name: 'Jordan', color: '#B39CFF', interests: ['minecraft', 'skate'] },
         { id: 'f2', name: 'Ava', color: '#F2A5C8', interests: ['music', 'soccer'] },
@@ -266,12 +290,17 @@ function exampleData() {
         { id: 't1', name: "Friday's game", icon: 'ticket', phrases: [P("I'm going too!", ['me', 'go']), P('Who are they playing?', ['question', 'soccer']), P('Can I sit with you?', ['hangout', 'qmark']), P('Go team!', ['rocket'])] }
       ]
     },
-    news: [
-      { id: 'n1', photo: null, tint: '#2F5A3A', sentence: 'I went to a soccer game. We won!', words: [{ icon: 'me', label: 'I' }, { icon: 'go', label: 'went' }, { icon: 'soccer', label: 'soccer' }, { icon: 'yes', label: 'we won' }], created: Date.now() - day },
-      { id: 'n2', photo: null, tint: '#5A3A4A', sentence: "It was my grandma's birthday.", words: [{ icon: 'cake', label: 'birthday' }, { icon: 'friend', label: 'grandma' }], created: Date.now() - 2 * day },
-      { id: 'n3', photo: null, tint: '#2F4A66', sentence: 'I went swimming. So fun!', words: [{ icon: 'pool', label: 'swimming' }, { icon: 'excited', label: 'so fun' }], created: Date.now() - 3 * day }
-    ]
+    news: []
   };
+}
+// Fill in anything an older saved profile is missing.
+function upgradeProfile(pr) {
+  delete pr.isExample;
+  pr.settings = Object.assign({}, DEFAULT_SETTINGS, pr.settings || {});
+  if (!Array.isArray(pr.card) || !pr.card.length) pr.card = DEFAULT_CARD.map(c => Object.assign({}, c));
+  pr.custom = pr.custom || {};
+  pr.friends = pr.friends || []; pr.topics = pr.topics || [];
+  return pr;
 }
 
 function defaultPlace() {
@@ -281,13 +310,13 @@ function defaultPlace() {
   return 'home';
 }
 
-const ex = exampleData();
+const ex = defaultData();
 const S = {
   profile: ex.profile, news: ex.news,
   view: 'talk', place: defaultPlace(), withId: null, step: 0, openMove: null,
   topicId: 't1', last: null, holding: false, newsPick: null, newsEdit: false,
   layer: null, editor: null, pickerCb: null, confirmReset: false, topicBusy: null, topicMsg: {},
-  pageMove: null, pageEdit: false, draft: { text: '', icon: 'plus' }
+  pageMove: null, pageEdit: false, draft: { text: '', icon: 'plus' }, backupMsg: '', backupErr: false
 };
 
 /* ---------- speech ---------- */
@@ -306,6 +335,16 @@ function speak(text) {
     if (window.speechSynthesis.speaking || window.speechSynthesis.pending) window.speechSynthesis.cancel();
     window.speechSynthesis.speak(u);
   } catch (e) {}
+}
+function speakButton(text) { if (S.profile.settings && S.profile.settings.speakButtons && text) speak(text); }
+function buttonLabel(t) {
+  if (t.dataset.say) return t.dataset.say;
+  const txt = (t.textContent || '').replace(/\s+/g, ' ').trim();
+  return txt || t.getAttribute('aria-label') || '';
+}
+function applyTextSize() {
+  const z = Number(S.profile.settings && S.profile.settings.textSize) || 1;
+  document.documentElement.style.fontSize = (16 * z) + 'px';
 }
 function say(p, opts) {
   speak(p.text);
@@ -426,14 +465,17 @@ async function initStore() {
         if (data.kind === 'news' && data.item) news.push(data.item);
       });
       store.mode = 'db';
-      if (profile) { S.profile = profile; S.news = news; afterLoad(); }
+      if (profile) { S.profile = upgradeProfile(profile); S.news = news; afterLoad(); }
     } catch (e) { store.mode = 'none'; }
   }
   if (store.mode !== 'db') {
     const saved = lsGet();
     store.mode = saved !== null || lsSet({ probe: 1 }) ? 'local' : 'none';
-    if (saved && saved.profile) { S.profile = saved.profile; S.news = saved.news || []; afterLoad(); }
+    if (saved && saved.profile) { S.profile = upgradeProfile(saved.profile); S.news = saved.news || []; afterLoad(); }
+    // Ask the browser not to clear this app's storage when the phone is low on space.
+    try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch (e) {}
   }
+  applyTextSize();
   renderStatus();
   render();
 }
@@ -442,15 +484,9 @@ function afterLoad() {
   if (S.withId && !friend()) S.withId = null;
 }
 let saveTimer = null;
-function markOwned() {
-  if (!S.profile.isExample) return false;
-  S.profile.isExample = false;
-  return true;
-}
 function scheduleSave(opts) {
-  const wasExample = markOwned();
   clearTimeout(saveTimer);
-  saveTimer = setTimeout(() => saveProfile(wasExample || (opts && opts.all)), 600);
+  saveTimer = setTimeout(() => saveProfile(opts && opts.all), 600);
   store.saving = true; renderStatus();
 }
 async function saveProfile(all) {
@@ -468,22 +504,20 @@ async function saveProfile(all) {
   store.saving = false; renderStatus();
 }
 async function saveNews(item) {
-  const wasExample = markOwned();
   store.saving = true; renderStatus();
   if (store.mode === 'db') {
     try {
       await store.col.doc('news-' + item.id).set({ kind: 'news', item: clone(item) });
       store.saving = false;
-      await saveProfile(wasExample);
+      await saveProfile();
     } catch (e) { store.error = 'Could not save that news. Try a smaller photo.'; store.saving = false; renderStatus(); }
   } else { await saveProfile(); }
 }
 async function removeNews(id) {
-  const wasExample = markOwned();
   S.news = S.news.filter(n => n.id !== id);
   if (store.mode === 'db') {
     try { await store.col.doc('news-' + id).delete(); } catch (e) {}
-    await saveProfile(wasExample);
+    await saveProfile();
   } else { await saveProfile(); }
 }
 async function resetAll() {
@@ -493,16 +527,15 @@ async function resetAll() {
       for (const d of snap.docs) await store.col.doc(d.id).delete();
     } catch (e) {}
   } else { try { localStorage.removeItem(LS_KEY); } catch (e) {} }
-  const fresh = exampleData();
+  const fresh = defaultData();
   S.profile = fresh.profile; S.news = fresh.news; S.withId = null; S.topicId = 't1'; S.last = null; S.step = 0;
-  renderStatus(); render();
+  applyTextSize(); renderStatus(); render();
 }
 function renderStatus() {
   const el = document.getElementById('status');
   let icon = 'yes', text = '';
   if (store.error) { icon = 'help'; text = store.error; }
   else if (store.saving) { icon = 'wait'; text = 'Saving'; }
-  else if (S.profile.isExample) { icon = 'idea'; text = 'Example profile'; }
   else if (store.mode === 'db') { text = 'Saved to your account'; }
   else if (store.mode === 'local') { text = 'Saved on this phone'; }
   else { icon = 'help'; text = 'Not saving'; }
@@ -577,17 +610,14 @@ function renderSaidInto() {
       <div class="words">${wordStrip(p.words)}</div>
       <div class="text">${S.holding ? 'Friends heard: ' : ''}"${esc(p.text)}"</div>
     </div>
-    <button class="roundbtn" data-act="replay" aria-label="Say it again">${ic('speaker', 'm')}</button>
-    <button class="roundbtn" data-act="show" aria-label="Show friends">${ic('showfriends', 'm')}</button>
+    <button class="roundbtn" data-act="replay" data-say="Again">${ic('speaker')}Again</button>
+    <button class="roundbtn" data-act="show" data-say="Show friends">${ic('showfriends')}Show</button>
   </div>`;
 }
 function renderTabs() {
   const tabs = [['talk', 'Talk', 'wave'], ['group', 'Group', 'hangout'], ['news', 'News', 'news'], ['setup', 'Setup', 'do']];
   document.getElementById('tabs').innerHTML = tabs.map(([id, name, icon]) =>
     `<button class="tab ${S.view === id ? 'on' : ''}" data-act="tab" data-id="${id}" aria-current="${S.view === id ? 'page' : 'false'}">${ic(icon)}${name}</button>`).join('');
-}
-function exampleBanner() {
-  return S.profile.isExample ? `<div class="banner">${ic('idea', 'm')}<span>Example profile for Maya. Make it yours in Setup.</span></div>` : '';
 }
 function friendAvatar(f) { return `<span class="avatar" style="background:${esc(f.color)}">${ic('jordan')}</span>`; }
 
@@ -601,7 +631,7 @@ function viewTalk() {
     return `<div class="movewrap"><button class="move ${m.id === next ? 'next' : ''}" data-act="move" data-id="${m.id}">
       <span class="head">${ic(m.icon, 'l')}<span class="name">${m.name}</span>${m.id === next ? `<span class="badge">${ic('next', 'xs')}NEXT</span>` : ''}</span>
       <span class="phrase">${esc(ps[0] ? ps[0].text : '')}</span>
-    </button><button class="morebtn" data-act="page" data-id="${m.id}" aria-label="All ${m.name} choices">${ic('plus', 'xs')}more</button></div>`;
+    </button><button class="morebtn" data-act="page" data-id="${m.id}" data-say="More ${m.name}">${ic('plus', 's')}more</button></div>`;
   }).join('');
   let alts = '';
   if (S.openMove) {
@@ -611,8 +641,7 @@ function viewTalk() {
       ps.map((p, i) => `<button class="join" data-act="alt" data-i="${i + 1}"><span class="icons">${p.words.slice(0, 2).map(w => ic(w.icon)).join('')}</span><span>${esc(p.text)}</span></button>`).join('') + '</div>';
   }
   const lunchHint = S.place === 'lunch' ? `<button class="big wide" data-act="tab" data-id="group">${ic('hangout')}Group mode for lunch</button>` : '';
-  return `${exampleBanner()}
-    <div class="row" role="group" aria-label="Where are you">${placeChips}</div>
+  return `<div class="row" role="group" aria-label="Where are you">${placeChips}</div>
     <div class="row" role="group" aria-label="Who are you talking with">${withChips}</div>
     <div class="moves">${moves}</div>
     ${alts}
@@ -636,12 +665,13 @@ function viewGroup() {
   const topicChips = topics.map(x => `<button class="chip ${x.id === t.id ? 'on' : ''}" data-act="topic" data-id="${esc(x.id)}">${ic(x.icon, 'm')}${esc(x.name)}</button>`).join('');
   const reactions = REACTIONS.map((r, i) => `<button class="tile" data-act="react" data-i="${i}">${ic(r.icon, 'l')}${esc(r.label)}</button>`).join('');
   const joins = t.phrases.map((p, i) => `<button class="join" data-act="join" data-i="${i}"><span class="icons">${p.words.slice(0, 2).map(w => ic(w.icon)).join('')}</span><span>${esc(p.text)}</span></button>`).join('');
-  return `${exampleBanner()}
-    <div class="label">${ic('ticket', 's')}Talking about</div>
+  return `<div class="label">${ic('ticket', 's')}Talking about</div>
     <div class="row" role="group" aria-label="Topic">${topicChips}</div>
     <div class="reactions">${reactions}</div>
     <div class="label">${ic(t.icon, 's')}Join in about ${esc(t.name)}</div>
     <div class="alts" style="padding:8px">${joins || note('No phrases yet. Add some in Setup.')}</div>
+    <div class="label">${ic('question', 's')}Ask the group</div>
+    <div class="ptiles">${GROUP_ASK.map((p, i) => `<button class="ptile" data-act="groupAsk" data-i="${i}"><span class="icons">${p.words.slice(0, 2).map(w => ic(w.icon)).join('')}</span><span>${esc(p.text)}</span></button>`).join('')}</div>
     <div class="quick">
       <button class="big warn" data-act="hold">${ic('holdon')}Hold on</button>
       <button class="big" data-act="show">${ic('showfriends')}Show friends</button>
@@ -661,39 +691,45 @@ function viewNews() {
       </button>
       ${S.newsEdit ? `<div class="edit-row"><button class="small" data-act="newsEditOne" data-id="${esc(item.id)}">${ic('do', 's')}Edit</button><button class="small danger" data-act="newsDelete" data-id="${esc(item.id)}">${ic('no', 's')}Remove</button></div>` : ''}
     </div>`).join('');
-  return `${exampleBanner()}
-    <div class="flexrow" style="justify-content:space-between">
+  return `<div class="flexrow" style="justify-content:space-between">
       <div class="label">${ic('camera', 's')}Tap a story to tell it</div>
       <button class="small" data-act="newsEditToggle">${S.newsEdit ? ic('done', 's') + 'Done' : ic('do', 's') + 'Edit'}</button>
     </div>
-    <div class="news">${cards || note('No news yet. Add a photo from your day.')}</div>
+    <div class="news">${cards || note('No news yet. Add a photo from your day or weekend, then tap it to tell friends.')}</div>
     <button class="big primary wide" data-act="newsAdd">${ic('camera')}Add news from a photo</button>
+    <div class="label">${ic('tellmore', 's')}Keep it going</div>
+    <div class="ptiles">${NEWS_FOLLOW.map((p, i) => `<button class="ptile" data-act="newsFollow" data-i="${i}"><span class="icons">${p.words.slice(0, 2).map(w => ic(w.icon)).join('')}</span><span>${esc(p.text)}</span></button>`).join('')}</div>
     <button class="big wide" data-act="askBack">${ic('question')}Ask back: What did you do?</button>`;
 }
 
+const TEXT_SIZES = [{ v: 1, name: 'Normal' }, { v: 1.15, name: 'Large' }, { v: 1.3, name: 'Larger' }, { v: 1.5, name: 'Largest' }];
+const PHRASE_HOMES = MOVES.map(m => ({ id: m.id, name: m.name, icon: m.icon }));
+function switchBtn(act, on, icon, label) {
+  return `<button class="switch ${on ? 'on' : ''}" data-act="${act}" role="switch" aria-checked="${on}" data-say="${esc(label)}, ${on ? 'on' : 'off'}">${ic(icon, 'm')}<span>${esc(label)}<br><span class="state">${on ? 'On' : 'Off'}</span></span><span class="knob"></span></button>`;
+}
 function viewSetup() {
-  const p = S.profile;
+  const p = S.profile, st = p.settings;
   const voiceOpts = ['<option value="">Phone default voice</option>'].concat(voices.map(v =>
     `<option value="${esc(v.voiceURI)}" ${v.voiceURI === p.voiceURI ? 'selected' : ''}>${esc(v.name)} (${esc(v.lang)})</option>`)).join('');
   const friends = p.friends.map(f => `<div class="sub">
       <div class="flexrow">
-        <button class="avatar" style="background:${esc(f.color)};width:48px;height:48px;border-radius:24px;border:none" data-act="friendColor" data-id="${esc(f.id)}" aria-label="Change color">${ic('jordan', 'm')}</button>
+        <button class="iconbtn" style="background:${esc(f.color)};border:none;color:#0E1214" data-act="friendColor" data-id="${esc(f.id)}" data-say="Change color">${ic('jordan')}color</button>
         <input class="input" data-bind="friend.name" data-id="${esc(f.id)}" value="${esc(f.name)}" aria-label="Friend's name" placeholder="Name">
-        <button class="small danger" data-act="friendDelete" data-id="${esc(f.id)}">${ic('no', 's')}Remove</button>
       </div>
-      <div class="label">${ic('want', 's')}Likes</div>
-      <div class="toggles">${Object.keys(INTERESTS).map(k => `<button class="tog ${f.interests.includes(k) ? 'on' : ''}" data-act="interest" data-id="${esc(f.id)}" data-k="${k}">${ic(k, 'm')}${esc(LABELS[k])}</button>`).join('')}</div>
+      <div class="label">${ic('want', 's')}${esc(f.name || 'They')} likes</div>
+      <div class="toggles">${Object.keys(INTERESTS).map(k => { const on = f.interests.includes(k); return `<button class="tog ${on ? 'on' : ''}" data-act="interest" data-id="${esc(f.id)}" data-k="${k}" aria-pressed="${on}">${ic(k, 'm')}${esc(LABELS[k])}</button>`; }).join('')}</div>
+      <button class="small danger" data-act="friendDelete" data-id="${esc(f.id)}" data-say="Remove ${esc(f.name || 'friend')}">${ic('no', 's')}Remove ${esc(f.name || 'friend')}</button>
     </div>`).join('');
   const canSuggest = sampleFn && !sampleOff;
   const topics = p.topics.map(t => `<div class="sub">
       <div class="flexrow">
-        <button class="iconbtn" data-act="topicIcon" data-id="${esc(t.id)}" aria-label="Change picture">${ic(t.icon)}</button>
+        <button class="iconbtn" data-act="topicIcon" data-id="${esc(t.id)}" data-say="Change picture">${ic(t.icon)}picture</button>
         <input class="input" data-bind="topic.name" data-id="${esc(t.id)}" value="${esc(t.name)}" aria-label="Topic name" placeholder="Topic, like Friday's game">
       </div>
-      ${t.phrases.map((ph, i) => `<div class="flexrow">
-        <button class="iconbtn" data-act="phraseIcon" data-id="${esc(t.id)}" data-i="${i}" aria-label="Change picture">${ic((ph.words[0] || {}).icon || 'plus')}</button>
-        <input class="input" data-bind="phrase.text" data-id="${esc(t.id)}" data-i="${i}" value="${esc(ph.text)}" aria-label="Phrase" placeholder="Something to say">
-        <button class="roundbtn" data-act="phraseDelete" data-id="${esc(t.id)}" data-i="${i}" aria-label="Remove phrase">${ic('no', 's')}</button>
+      ${t.phrases.map((ph, i) => `<div class="flexrow" style="flex-wrap:wrap">
+        <button class="iconbtn" data-act="phraseIcon" data-id="${esc(t.id)}" data-i="${i}" data-say="Change picture">${ic((ph.words[0] || {}).icon || 'plus')}picture</button>
+        <input class="input" style="flex:1" data-bind="phrase.text" data-id="${esc(t.id)}" data-i="${i}" value="${esc(ph.text)}" aria-label="Phrase" placeholder="Something to say">
+        <button class="small danger" data-act="phraseDelete" data-id="${esc(t.id)}" data-i="${i}" data-say="Remove phrase">${ic('no', 's')}Remove</button>
       </div>`).join('')}
       <div class="flexrow" style="flex-wrap:wrap">
         <button class="small" data-act="phraseAdd" data-id="${esc(t.id)}">${ic('plus', 's')}Add phrase</button>
@@ -702,19 +738,36 @@ function viewSetup() {
       </div>
       ${S.topicMsg[t.id] ? note(S.topicMsg[t.id], true) : ''}
     </div>`).join('');
+  const own = PHRASE_HOMES.map(m => {
+    const list = p.custom[m.id] || [];
+    if (!list.length) return '';
+    return `<div class="label">${ic(m.icon, 's')}${esc(m.name)}</div>` + list.map((ph, i) => `<div class="flexrow" style="flex-wrap:wrap">
+      <span class="flexrow" style="flex:1;min-width:0">${ic((ph.words[0] || {}).icon || m.icon, 'm')}<span>${esc(ph.text)}</span></span>
+      <button class="small danger" data-act="ownDelete" data-m="${m.id}" data-i="${i}" data-say="Remove ${esc(ph.text)}">${ic('no', 's')}Remove</button></div>`).join('');
+  }).join('');
+  const cardRows = p.card.map((c, i) => `<div class="flexrow" style="flex-wrap:wrap">
+      <button class="iconbtn" data-act="cardIcon" data-i="${i}" data-say="Change picture">${ic(c.icon)}picture</button>
+      <input class="input" style="flex:1" data-bind="card.text" data-i="${i}" value="${esc(c.text)}" aria-label="Talk card line ${i + 1}" placeholder="Something new friends should know">
+      <button class="small danger" data-act="cardDelete" data-i="${i}" data-say="Remove line">${ic('no', 's')}Remove</button>
+    </div>`).join('');
   const storeNote = store.mode === 'db' ? 'Saved privately to your Claude account, so only you see it.' :
-    store.mode === 'local' ? 'Saved on this phone only. Clearing browser data will erase it.' : 'Saving is not available here, so changes last until you close the page.';
-  return `${exampleBanner()}
+    store.mode === 'local' ? 'Everything is saved on this phone only, even with no internet. Back it up to keep a copy or move it to another phone.' : 'Saving is not available here, so changes last until you close the page.';
+  return `
     <div class="section">
       <h2>${ic('me', 'm')}About me</h2>
-      <div class="field"><label class="label" for="f-name">${ic('me', 's')}My name</label><input class="input" id="f-name" data-bind="name" value="${esc(p.name)}"></div>
+      <div class="field"><label class="label" for="f-name">${ic('me', 's')}My name</label><input class="input" id="f-name" data-bind="name" value="${esc(p.name)}" autocomplete="off"></div>
     </div>
     <div class="section">
       <h2>${ic('voice', 'm')}My voice</h2>
       <div class="field"><label class="label" for="f-voice">${ic('voice', 's')}Voice</label><select class="input" id="f-voice" data-bind="voice">${voiceOpts}</select></div>
-      <div class="field"><label class="label" for="f-rate">${ic('go', 's')}Speed</label><input type="range" id="f-rate" min="0.6" max="1.4" step="0.1" value="${esc(p.rate || 1)}" data-bind="rate"></div>
+      <div class="field"><label class="label" for="f-rate">${ic('go', 's')}Speed</label><input type="range" id="f-rate" min="0.6" max="1.4" step="0.1" value="${esc(p.rate || 1)}" data-bind="rate" aria-valuetext="${Math.round((p.rate || 1) * 100)} percent"></div>
       <button class="small accent" data-act="testVoice">${ic('speaker', 's')}Test my voice</button>
+      ${switchBtn('toggleSpeakButtons', st.speakButtons, 'speaker', 'Say every button out loud')}
       ${note('No sound? Turn off silent mode with the switch on the side of the iPhone.')}
+    </div>
+    <div class="section">
+      <h2>${ic('picture', 'm')}Text size</h2>
+      <div class="seg" role="group" aria-label="Text size">${TEXT_SIZES.map(z => `<button class="${st.textSize === z.v ? 'on' : ''}" data-act="textSize" data-v="${z.v}" aria-pressed="${st.textSize === z.v}" style="font-size:${z.v}rem">${ic('story', 's')}${z.name}</button>`).join('')}</div>
     </div>
     <div class="section">
       <h2>${ic('hangout', 'm')}Friends</h2>
@@ -729,14 +782,29 @@ function viewSetup() {
       <button class="small" data-act="topicAdd">${ic('plus', 's')}Add topic</button>
     </div>
     <div class="section">
-      <h2>${ic('qr', 'm')}Talk card</h2>
-      <p>Show this to new friends so they know how to talk with you.</p>
-      <button class="small accent" data-act="talkCard">${ic('showfriends', 's')}Show my talk card</button>
+      <h2>${ic('chat', 'm')}My phrases</h2>
+      <p>Phrases you add with the Add button on a move page show up here.</p>
+      ${own || note('No phrases yet. Open a move, tap more, then Add.')}
     </div>
     <div class="section">
-      <h2>${ic('do', 'm')}Saving</h2>
+      <h2>${ic('qr', 'm')}Talk card</h2>
+      <p>Show this to new friends so they know how to talk with you.</p>
+      ${cardRows}
+      <div class="flexrow" style="flex-wrap:wrap">
+        <button class="small" data-act="cardAdd">${ic('plus', 's')}Add line</button>
+        <button class="small accent" data-act="talkCard">${ic('showfriends', 's')}Show my talk card</button>
+      </div>
+    </div>
+    <div class="section">
+      <h2>${ic('savecheck', 'm')}Saving and backup</h2>
       <p>${esc(storeNote)}</p>
-      <button class="small danger" data-act="reset">${ic('again', 's')}${S.confirmReset ? 'Tap again to erase everything' : 'Start over with the example'}</button>
+      <div class="flexrow" style="flex-wrap:wrap">
+        <button class="small accent" data-act="backup">${ic('send', 's')}Back up my settings</button>
+        <label class="small" for="restoreIn" role="button" tabindex="0" data-say="Restore from backup">${ic('again', 's')}Restore from backup</label>
+        <input type="file" id="restoreIn" class="vh" accept="application/json,.json">
+      </div>
+      ${S.backupMsg ? note(S.backupMsg, S.backupErr) : ''}
+      <button class="small danger" data-act="reset">${ic('stop', 's')}${S.confirmReset ? 'Tap again to erase everything' : 'Erase everything and start fresh'}</button>
     </div>`;
 }
 
@@ -745,6 +813,23 @@ function render() {
   view.innerHTML = S.view === 'talk' ? viewTalk() : S.view === 'group' ? viewGroup() : S.view === 'news' ? viewNews() : viewSetup();
   renderTabs();
   renderSaid();
+  const ri = document.getElementById('restoreIn');
+  if (ri) ri.addEventListener('change', onRestore);
+}
+function backupData() {
+  return JSON.stringify({ app: 'jump-in', version: 2, savedAt: new Date().toISOString(), profile: S.profile, news: S.news });
+}
+async function onRestore(ev) {
+  const file = ev.target.files && ev.target.files[0];
+  if (!file) return;
+  try {
+    const data = JSON.parse(await file.text());
+    if (!data || data.app !== 'jump-in' || !data.profile) throw new Error('not a backup');
+    S.profile = upgradeProfile(data.profile); S.news = Array.isArray(data.news) ? data.news : [];
+    afterLoad(); applyTextSize(); await saveProfile(true);
+    S.backupMsg = 'Restored. Everything from the backup is back.'; S.backupErr = false; speakButton('Restored');
+  } catch (e) { S.backupMsg = 'That file is not a Jump In backup.'; S.backupErr = true; speakButton(S.backupMsg); }
+  renderStatus(); render();
 }
 
 /* ---------- overlays ---------- */
@@ -767,13 +852,7 @@ function renderLayer() {
     el.innerHTML = `<div class="show" role="dialog" aria-label="Talk card">
       <button class="closer" data-act="closeLayer">${ic('bye', 's')}Close</button>
       <div class="sentence">Talking with ${esc(n)}</div>
-      <div class="card-tips">
-        <div>${ic('picture')}<span>I talk with pictures on my phone.</span></div>
-        <div>${ic('holdon')}<span>Give me a few seconds to answer.</span></div>
-        <div>${ic('yes')}<span>Yes or no questions are quick for me.</span></div>
-        <div>${ic('smile')}<span>Talk to me like you talk to anyone.</span></div>
-        <div>${ic('hangout')}<span>Ask me about my news. I love to share.</span></div>
-      </div>
+      <div class="card-tips">${S.profile.card.filter(c => c.text.trim()).map(c => `<div>${ic(c.icon)}<span>${esc(c.text)}</span></div>`).join('')}</div>
     </div>`;
     return;
   }
@@ -782,9 +861,9 @@ function renderLayer() {
     const secs = movePage(m.id);
     const f = friend();
     const body = secs.map((sec, si) => `<div class="label">${ic(sec.icon, 's')}${esc(sec.title)}${si === 0 && f ? ' with ' + esc(f.name) : ''}</div>
-      <div class="ptiles">${sec.phrases.map((ph, i) => `<div style="position:relative;display:flex">
-        <button class="ptile" style="flex:1" data-act="pageSay" data-s="${si}" data-i="${i}"><span class="icons">${ph.words.slice(0, 2).map(w => ic(w.icon)).join('')}</span><span>${esc(ph.text)}</span></button>
-        ${sec.custom && S.pageEdit ? `<button class="x" data-act="customDelete" data-i="${i}" aria-label="Remove">${ic('no', 's')}</button>` : ''}
+      <div class="ptiles">${sec.phrases.map((ph, i) => `<div class="ptwrap">
+        <button class="ptile" data-act="pageSay" data-s="${si}" data-i="${i}"><span class="icons">${ph.words.slice(0, 2).map(w => ic(w.icon)).join('')}</span><span>${esc(ph.text)}</span></button>
+        ${sec.custom && S.pageEdit ? `<button class="small danger" data-act="customDelete" data-i="${i}" data-say="Remove ${esc(ph.text)}">${ic('no', 's')}Remove</button>` : ''}
       </div>`).join('')}</div>`).join('');
     const d = S.draft;
     el.innerHTML = `<div class="page" role="dialog" aria-label="${esc(m.name)}">
@@ -797,7 +876,7 @@ function renderLayer() {
       ${S.pageEdit ? `<div class="sub">
         <div class="label">${ic('me', 's')}Add my own ${esc(m.name)} phrase</div>
         <div class="flexrow">
-          <button class="iconbtn" data-act="draftIcon" aria-label="Pick a picture">${ic(d.icon)}</button>
+          <button class="iconbtn" data-act="draftIcon" data-say="Pick a picture">${ic(d.icon)}picture</button>
           <input class="input" data-bind="draft.text" value="${esc(d.text)}" placeholder="Something I say" aria-label="New phrase">
         </div>
         <button class="big primary wide" data-act="draftSave">${ic('savecheck')}Save phrase</button>
@@ -833,9 +912,9 @@ function renderLayer() {
       <div class="field"><label class="label" for="e-sentence">${ic('speaker', 's')}What I will say</label><input class="input" id="e-sentence" data-bind="editor.sentence" value="${esc(e.sentence)}" placeholder="I went to a soccer game. We won!"></div>
       <div class="label">${ic('picture', 's')}Pictures for it</div>
       <div class="wordsrow">${e.words.map((w, i) => `<span class="sub" style="padding:6px;align-items:center;gap:4px">${ic(w.icon, 'l')}
-          <input class="input" style="height:36px;width:96px;font-size:13px" data-bind="editor.word" data-i="${i}" value="${esc(w.label)}" aria-label="Word">
-          <button class="small danger" style="height:32px;padding:0 8px" data-act="wordDelete" data-i="${i}">${ic('no', 'xs')}Remove</button></span>`).join('')}
-        ${e.words.length < 4 ? `<button class="iconbtn" style="width:72px;height:72px" data-act="wordAdd" aria-label="Add picture">${ic('plus')}</button>` : ''}
+          <input class="input" style="width:112px" data-bind="editor.word" data-i="${i}" value="${esc(w.label)}" aria-label="Word">
+          <button class="small danger" data-act="wordDelete" data-i="${i}">${ic('no', 's')}Remove</button></span>`).join('')}
+        ${e.words.length < 4 ? `<button class="iconbtn" style="min-width:88px;min-height:88px" data-act="wordAdd" data-say="Add picture">${ic('plus')}Add picture</button>` : ''}
       </div>
       <button class="big primary wide" data-act="editorSave" ${e.sentence.trim() ? '' : 'disabled'}>${ic('savecheck')}Save news</button>
     </div></div>`;
@@ -925,6 +1004,27 @@ const actions = {
   join(t) { const tp = allTopics().find(x => x.id === S.topicId); const p = tp && tp.phrases[Number(t.dataset.i)]; if (p) say(p); },
   newsSay(t) { const item = S.news.find(n => n.id === t.dataset.id); if (!item) return; S.newsPick = item.id; say({ text: item.sentence, words: item.words }); render(); },
   askBack() { say(P('What did you do?', ['do', 'qmark'])); },
+  groupAsk(t) { const p = GROUP_ASK[Number(t.dataset.i)]; if (p) say(p); },
+  newsFollow(t) { const p = NEWS_FOLLOW[Number(t.dataset.i)]; if (p) say(p); },
+  toggleSpeakButtons() { const st = S.profile.settings; st.speakButtons = !st.speakButtons; scheduleSave(); render(); if (st.speakButtons) speak('Say every button out loud, on'); return ''; },
+  textSize(t) { S.profile.settings.textSize = Number(t.dataset.v); applyTextSize(); scheduleSave(); render(); },
+  ownDelete(t) { const list = S.profile.custom[t.dataset.m]; if (!list) return; list.splice(Number(t.dataset.i), 1); scheduleSave(); render(); },
+  cardIcon(t) { openPicker(k => { const c = S.profile.card[Number(t.dataset.i)]; if (c) { c.icon = k; scheduleSave(); } render(); }); },
+  cardAdd() { S.profile.card.push({ icon: 'idea', text: '' }); scheduleSave(); render(); },
+  cardDelete(t) { S.profile.card.splice(Number(t.dataset.i), 1); scheduleSave(); render(); },
+  backup() {
+    const blob = new Blob([backupData()], { type: 'application/json' });
+    const name = `jump-in-backup-${new Date().toISOString().slice(0, 10)}.json`;
+    const file = typeof File === 'function' ? new File([blob], name, { type: 'application/json' }) : null;
+    // On iPhone the share sheet lets you save the file to Files, AirDrop it or email it.
+    if (file && navigator.canShare && navigator.canShare({ files: [file] })) {
+      navigator.share({ files: [file], title: 'Jump In backup' }).catch(() => {});
+    } else {
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name;
+      document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+    }
+    S.backupMsg = 'Backup made. Keep the file somewhere safe, like the Files app.'; S.backupErr = false; render();
+  },
   newsEditToggle() { S.newsEdit = !S.newsEdit; render(); },
   newsAdd() { S.editor = { id: null, photo: null, tint: '#2F4A66', sentence: '', words: [], note: '', file: null, busy: false, msg: '' }; S.layer = 'editor'; renderLayer(); },
   newsEditOne(t) { const item = S.news.find(n => n.id === t.dataset.id); if (!item) return; S.editor = Object.assign(clone(item), { note: '', file: null, busy: false, msg: '' }); S.layer = 'editor'; renderLayer(); },
@@ -970,7 +1070,13 @@ const actions = {
   friendAdd() { S.profile.friends.push({ id: newId(), name: '', color: FRIEND_COLORS[S.profile.friends.length % FRIEND_COLORS.length], interests: [] }); scheduleSave(); render(); },
   friendDelete(t) { S.profile.friends = S.profile.friends.filter(f => f.id !== t.dataset.id); if (S.withId === t.dataset.id) S.withId = null; scheduleSave(); render(); },
   friendColor(t) { const f = S.profile.friends.find(x => x.id === t.dataset.id); if (!f) return; f.color = FRIEND_COLORS[(FRIEND_COLORS.indexOf(f.color) + 1) % FRIEND_COLORS.length]; scheduleSave(); render(); },
-  interest(t) { const f = S.profile.friends.find(x => x.id === t.dataset.id); if (!f) return; const k = t.dataset.k; f.interests = f.interests.includes(k) ? f.interests.filter(x => x !== k) : f.interests.concat(k).slice(-3); scheduleSave(); render(); },
+  interest(t) {
+    const f = S.profile.friends.find(x => x.id === t.dataset.id); if (!f) return; const k = t.dataset.k;
+    const on = !f.interests.includes(k);
+    f.interests = on ? f.interests.concat(k).slice(-3) : f.interests.filter(x => x !== k);
+    scheduleSave(); render();
+    return `${LABELS[k]}, ${on ? 'on' : 'off'}`;
+  },
   topicAdd() { const id = newId(); S.profile.topics.push({ id, name: '', icon: 'ticket', phrases: [] }); scheduleSave(); render(); },
   topicDelete(t) { S.profile.topics = S.profile.topics.filter(x => x.id !== t.dataset.id); afterLoad(); scheduleSave(); render(); },
   topicIcon(t) { openPicker(k => { const tp = S.profile.topics.find(x => x.id === t.dataset.id); if (tp) { tp.icon = k; scheduleSave(); } render(); }); },
@@ -1007,21 +1113,40 @@ const actions = {
     S.topicBusy = null; render();
   },
   talkCard() { S.layer = 'card'; renderLayer(); },
-  reset() { if (!S.confirmReset) { S.confirmReset = true; render(); return; } S.confirmReset = false; resetAll(); }
+  reset() { if (!S.confirmReset) { S.confirmReset = true; render(); return 'Tap again to erase everything'; } S.confirmReset = false; resetAll(); return 'Erased. Starting fresh.'; }
 };
 document.addEventListener('click', ev => {
   const t = ev.target.closest('[data-act]');
   if (!t) return;
   if (t.dataset.act === 'closeLayerBg') { if (ev.target === t) actions.closeLayer(); return; }
-  const fn = actions[t.dataset.act];
-  if (fn) { ev.preventDefault(); fn(t); }
+  const act = t.dataset.act, fn = actions[act];
+  if (!fn) return;
+  ev.preventDefault();
+  const label = buttonLabel(t);
+  const out = fn(t);
+  // Buttons that already speak a phrase keep their own speech; every other tap says the button's name.
+  if (!SPEAKS_ITSELF.has(act)) speakButton(typeof out === 'string' ? out : label);
+});
+const SPEAKS_ITSELF = new Set(['move', 'alt', 'pageSay', 'quickSay', 'hold', 'replay', 'react', 'join', 'newsSay', 'askBack', 'groupAsk', 'newsFollow', 'testVoice', 'toggleSpeakButtons']);
+// The restore control is a label (it opens the file picker), so speak it here.
+document.addEventListener('click', ev => {
+  const l = ev.target.closest('label[for="restoreIn"], label[for="photoIn"]');
+  if (l) speakButton(l.dataset.say || buttonLabel(l));
+});
+// Say a field's name when it is tapped, so a non-reader knows what to type.
+document.addEventListener('focusin', ev => {
+  const t = ev.target;
+  if (!t.matches || !t.matches('input:not([type=file]):not([type=range]), select')) return;
+  const lab = t.id && document.querySelector(`label[for="${t.id}"]`);
+  speakButton(t.getAttribute('aria-label') || (lab && buttonLabel(lab)) || t.placeholder || '');
 });
 document.addEventListener('input', ev => {
   const t = ev.target, b = t.dataset && t.dataset.bind;
   if (!b) return;
   const p = S.profile;
   if (b === 'name') { p.name = t.value; scheduleSave(); }
-  else if (b === 'rate') { p.rate = Number(t.value); scheduleSave(); }
+  else if (b === 'rate') { p.rate = Number(t.value); t.setAttribute('aria-valuetext', Math.round(p.rate * 100) + ' percent'); scheduleSave(); }
+  else if (b === 'card.text') { const c = p.card[Number(t.dataset.i)]; if (c) { c.text = t.value; scheduleSave(); } }
   else if (b === 'friend.name') { const f = p.friends.find(x => x.id === t.dataset.id); if (f) { f.name = t.value; scheduleSave(); } }
   else if (b === 'topic.name') { const tp = p.topics.find(x => x.id === t.dataset.id); if (tp) { tp.name = t.value; scheduleSave(); } }
   else if (b === 'phrase.text') { const tp = p.topics.find(x => x.id === t.dataset.id); const ph = tp && tp.phrases[Number(t.dataset.i)]; if (ph) { ph.text = t.value; scheduleSave(); } }
@@ -1035,10 +1160,12 @@ document.addEventListener('input', ev => {
 });
 document.addEventListener('change', ev => {
   const t = ev.target;
-  if (t.dataset && t.dataset.bind === 'voice') { S.profile.voiceURI = t.value; scheduleSave(); }
+  if (t.dataset && t.dataset.bind === 'voice') { S.profile.voiceURI = t.value; scheduleSave(); speak(`Hi, I'm ${S.profile.name || 'here'}. This is my voice.`); }
+  if (t.dataset && t.dataset.bind === 'rate') speak('This is my speed.');
 });
 
 document.getElementById('brandIcon').src = ICON.wave;
+applyTextSize();
 render();
 renderStatus();
 initStore();
