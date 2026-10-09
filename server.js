@@ -1,4 +1,4 @@
-// Ready web server: serves the app in public/ and one API route that asks Claude
+// Jump In web server: serves the app in public/ and one API route that asks Claude
 // for phrase suggestions. The API key stays on the server (ANTHROPIC_API_KEY).
 // No dependencies; needs Node 20+.
 const http = require('http');
@@ -103,4 +103,4 @@ http.createServer((req, res) => {
   if (url === '/api/suggest' && req.method === 'POST') return suggest(req, res);
   if (req.method !== 'GET' && req.method !== 'HEAD') return send(res, 405, { error: 'Method not allowed' });
   serveStatic(req, res);
-}).listen(PORT, () => console.log(`Ready is running on port ${PORT}${API_KEY ? '' : ' (no ANTHROPIC_API_KEY: suggestions off)'}`));
+}).listen(PORT, () => console.log(`Jump In is running on port ${PORT}${API_KEY ? '' : ' (no ANTHROPIC_API_KEY: suggestions off)'}`));

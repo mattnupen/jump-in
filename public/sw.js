@@ -1,5 +1,5 @@
-// Keeps Ready working with no signal: the app shell is cached, API calls always go to the network.
-const CACHE = 'ready-v2';
+// Keeps Jump In working with no signal: the app shell is cached, API calls always go to the network.
+const CACHE = 'jump-in-v1';
 const SHELL = ['/', '/manifest.webmanifest', '/icons/app-180.png', '/icons/app-192.png', '/icons/app-512.png'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL)).then(() => self.skipWaiting())); });
 self.addEventListener('activate', e => {

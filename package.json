@@ -1,8 +1,8 @@
 {
-  "name": "funaac-ready",
+  "name": "jump-in",
   "version": "0.2.0",
   "private": true,
-  "description": "funAAC Ready: a picture-based conversation app prototype for teens who use AAC",
+  "description": "Jump In: a picture-based conversation app prototype for teens who use AAC",
   "scripts": {
     "build": "node build.js",
     "start": "node server.js",

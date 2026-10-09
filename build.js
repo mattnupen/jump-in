@@ -25,7 +25,7 @@ const html = `<!doctype html>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Ready">
+<meta name="apple-mobile-web-app-title" content="Jump In">
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/icons/app-180.png">
 <link rel="icon" type="image/png" href="/icons/app-192.png">

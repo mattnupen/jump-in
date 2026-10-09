@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: funaac-ready
+    name: jump-in
     runtime: node
     plan: free
     buildCommand: node build.js

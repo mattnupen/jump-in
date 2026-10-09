@@ -1,6 +1,8 @@
-# funAAC Ready
+# Jump In
 
 A picture-based conversation app prototype for teens who use AAC. Every button is a pictograph plus a word.
+
+Jump In grew out of the "Ready" concept in the funAAC research project: six conversation moves that help a teen jump into everyday talk.
 It runs in the phone's browser, talks out loud with the phone's own voice, and can be added to the iPhone home screen.
 
 ## What's in it
@@ -37,9 +39,9 @@ Then open http://localhost:3000. Claude suggestions stay hidden unless you set `
 ## Put it on Render
 
 1. In Render, click **New +** and choose **Blueprint**.
-2. Connect your GitHub account if asked, then pick the **funaac-ready** repo. Render reads `render.yaml` and sets up a web service called funaac-ready.
+2. Connect your GitHub account if asked, then pick the **jump-in** repo. Render reads `render.yaml` and sets up a web service called jump-in.
 3. Render asks for **ANTHROPIC_API_KEY**. Paste a key from https://console.anthropic.com (Settings, API keys) to turn on Claude suggestions, or leave it blank to run without them.
-4. Click **Apply**. The first build takes a few minutes. Your link will look like `https://funaac-ready.onrender.com`.
+4. Click **Apply**. The first build takes a few minutes. Your link will look like `https://jump-in.onrender.com`.
 
 Every push to the main branch redeploys automatically.
 
@@ -58,7 +60,7 @@ The free Render plan goes to sleep after about 15 minutes with no visitors, so t
 
 1. Open the Render link in **Safari**.
 2. Tap **Share**, then **Add to Home Screen**, then **Add**.
-3. Open Ready from the home screen. It runs full screen like an app.
+3. Open Jump In from the home screen. It runs full screen like an app.
 4. If you hear nothing, flip the silent switch on the side of the phone off.
 
 ## What it can't do yet
