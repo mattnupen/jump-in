@@ -11,9 +11,18 @@ It runs in the phone's browser, talks out loud with the phone's own voice, and c
 - **Yes / No / Maybe / Say again?** quick answers, **Hold on**, and **Show friends** (big pictures to turn the phone around).
 - **Group**: pick what friends are talking about, then react or join in.
 - **News**: photos from the teen's day with a sentence and pictographs. AI can suggest the words from the photo.
-- **Setup**: name, voice and speed, friends and their interests, topics, and a talk card for new friends.
+- **Setup**: name (starts as Rori), voice and speed, a switch to say every button out loud, text size, friends and their interests, topics, your own phrases, an editable talk card, and backup/restore.
+- **Every tap is spoken**: phrase buttons say the phrase; every other button (Setup included) says its name, and switches say on or off. Text boxes say their name when tapped.
 
-Everything the teen sets up is saved on that phone (browser storage). Nothing is sent anywhere except a photo or topic name when someone taps **Suggest words** or **Suggest phrases**.
+## Accessibility
+
+Built to Apple's Human Interface Guidelines minimums and checked by automated audits at iPhone size:
+- Every button is at least 44 x 44 points.
+- Text contrast is at least 4.5:1 (3:1 for large text); selected states have a 3:1 border.
+- Nothing is smaller than 13 pt, body text is 17 pt, and Setup > Text size goes up to 150% without sideways scrolling.
+- Every button shows a pictograph and a word. Reduced motion is respected.
+
+Everything the teen sets up is saved on that phone in the browser's local storage (cookies are too small for photos). Setup > Back up my settings saves a file you can keep in the Files app and restore on another phone. Nothing is sent anywhere except a photo or topic name when someone taps **Suggest words** or **Suggest phrases**.
 
 ## Project layout
 
