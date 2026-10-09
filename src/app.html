@@ -79,6 +79,8 @@ main { flex: 1; padding: 4px 16px calc(96px + env(safe-area-inset-bottom, 0px));
 .move { position: relative; min-height: 118px; border-radius: 22px; border: 3px solid transparent; background: var(--surface); padding: 10px 12px; display: flex; flex-direction: column; justify-content: space-between; gap: 6px; text-align: left; transition: transform .08s; }
 .move:active, .tile:active, .chip:active, .join:active { transform: scale(0.97); }
 .move.next { background: var(--accent-soft); border-color: var(--accent); box-shadow: 0 0 0 4px rgba(94, 224, 200, 0.25), 0 0 22px rgba(94, 224, 200, 0.45); animation: glow 2.4s ease-in-out infinite; }
+.move.changed .phrase { animation: changed 1.2s ease-out; }
+@keyframes changed { 0% { color: var(--accent); transform: scale(1.04); } 100% { color: #D3DCDF; transform: none; } }
 @keyframes glow { 50% { box-shadow: 0 0 0 6px rgba(94, 224, 200, 0.18), 0 0 30px rgba(94, 224, 200, 0.6); } }
 .move .head { display: flex; align-items: center; gap: 8px; width: 100%; }
 .move .name { font-family: var(--font-display); font-weight: 800; font-size: 1.25rem; }
@@ -361,13 +363,43 @@ function interestsInPlay() {
   return all.slice(0, 2);
 }
 function sortedNews() { return S.news.slice().sort((a, b) => (b.created || 0) - (a.created || 0)); }
+/* Place-specific phrases come first on Hi, Ask, More and Bye, so tapping School, Lunch, Home or Out changes what is suggested. */
+const PLACE_PHRASES = {
+  school: {
+    hi: [P('Hey! Ready for class?', ['wave', 'school'])],
+    ask: [P('What class do you have next?', ['school', 'qmark']), P('Did you do the homework?', ['school', 'qmark'])],
+    more: [P('Want to sit together at lunch?', ['lunch', 'hangout']), P('Can we work together?', ['hangout', 'school'])],
+    bye: [P('See you in class!', ['school', 'wave'])]
+  },
+  lunch: {
+    hi: [P('Hey! Can I sit here?', ['wave', 'lunch'])],
+    ask: [P('What are you eating?', ['pizza', 'qmark']), P('Is this seat taken?', ['lunch', 'qmark'])],
+    more: [P('Want to trade snacks?', ['pizza', 'hangout']), P('This is good!', ['pizza', 'smile'])],
+    bye: [P('See you after lunch!', ['lunch', 'wave'])]
+  },
+  home: {
+    hi: [P("Hi! I'm home!", ['wave', 'home'])],
+    ask: [P('What are we having for dinner?', ['pizza', 'qmark']), P('Can I play games?', ['gaming', 'qmark'])],
+    more: [P('Want to hang out?', ['hangout', 'qmark']), P('Can a friend come over?', ['comeover', 'qmark'])],
+    bye: [P('Good night!', ['home', 'wave'])]
+  },
+  out: {
+    hi: [P('Hey! Fancy seeing you here!', ['wave', 'outside'])],
+    ask: [P('What are you doing here?', ['outside', 'qmark']), P('Where are you going?', ['go', 'qmark'])],
+    more: [P('This is fun!', ['excited']), P('Want to come with us?', ['go', 'hangout'])],
+    bye: [P('See you around!', ['outside', 'wave'])]
+  }
+};
 function phrasesFor(move) {
   const f = friend(), n = f ? f.name : '';
   const now = new Date(), h = now.getHours(), day = now.getDay();
   const out = [];
+  const placed = (PLACE_PHRASES[S.place] || {})[move] || [];
   if (move === 'hi') {
-    if (h < 11) out.push(P(`Good morning${n ? ', ' + n : ''}!`, ['outside', 'wave']));
-    out.push(P(`Hey${n ? ' ' + n : ''}! Good to see you!`, ['wave', 'smile']));
+    if (h < 11 && S.place !== 'lunch') out.push(P(`Good morning${n ? ', ' + n : ''}!`, ['outside', 'wave']));
+    if (n) out.push(P(`Hey ${n}! Good to see you!`, ['wave', 'smile']));
+    placed.forEach(x => out.push(x));
+    if (!n) out.push(P('Hey! Good to see you!', ['wave', 'smile']));
     out.push(P("What's up?", ['wave', 'qmark']));
     out.push(P('Hi!', ['wave']));
   } else if (move === 'react') {
@@ -376,20 +408,19 @@ function phrasesFor(move) {
     sortedNews().forEach(item => out.push({ text: item.sentence, words: item.words, newsId: item.id }));
     if (!out.length) out.push(P('I have news!', ['news']));
   } else if (move === 'ask') {
+    placed.forEach(x => out.push(x));
     if (day === 1) out.push(P('How was your weekend?', ['howru', 'saturday']));
     else if (day === 5) out.push(P('Any plans this weekend?', ['saturday', 'qmark']));
     out.push(P('How are you?', ['howru']));
     interestsInPlay().forEach(i => INTERESTS[i] && out.push(INTERESTS[i].ask));
     out.push(P('What did you do?', ['do', 'qmark']));
   } else if (move === 'more') {
-    if (S.place === 'school') out.push(P('Want to sit together at lunch?', ['lunch', 'hangout']));
-    if (S.place === 'lunch') out.push(P('What are you eating?', ['pizza', 'qmark']));
-    if (S.place === 'home') out.push(P('Want to hang out?', ['hangout', 'qmark']));
-    if (S.place === 'out') out.push(P('This is fun!', ['excited']));
+    placed.forEach(x => out.push(x));
     interestsInPlay().forEach(i => INTERESTS[i] && out.push(INTERESTS[i].more));
     out.push(P('Tell me more!', ['tellmore']));
   } else if (move === 'bye') {
     if (S.place === 'school' && h < 12) out.push(P('See you at lunch!', ['lunch', 'wave']));
+    placed.forEach(x => out.push(x));
     out.push(P('See you later!', ['wave']));
     out.push(P(`Bye${n ? ' ' + n : ''}!`, ['bye']));
     out.push(P('Text me!', ['textmsg']));
@@ -961,7 +992,11 @@ function advance(moveId) {
 }
 const actions = {
   tab(t) { S.view = t.dataset.id; S.openMove = null; S.confirmReset = false; render(); window.scrollTo(0, 0); },
-  place(t) { S.place = t.dataset.id; render(); },
+  place(t) {
+    const before = MOVES.map(m => (phrasesFor(m.id)[0] || {}).text);
+    S.place = t.dataset.id; S.openMove = null; render();
+    MOVES.forEach((m, i) => { if ((phrasesFor(m.id)[0] || {}).text !== before[i]) { const el = document.querySelector(`.move[data-id="${m.id}"]`); if (el) el.classList.add('changed'); } });
+  },
   with(t) { S.withId = t.dataset.id || null; render(); },
   move(t) {
     const id = t.dataset.id, ps = phrasesFor(id);
