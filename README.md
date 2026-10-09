@@ -2,7 +2,7 @@
 
 A picture-based conversation app prototype for teens who use AAC. Every button is a pictograph plus a word.
 
-Jump In grew out of the "Ready" concept in the funAAC research project: six conversation moves that help a teen jump into everyday talk.
+Six conversation moves help a teen jump into everyday talk at school, at lunch and with friends.
 It runs in the phone's browser, talks out loud with the phone's own voice, and can be added to the iPhone home screen.
 
 ## What's in it
