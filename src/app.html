@@ -256,11 +256,13 @@ body { font-size: 1.0625rem; }
 .roundbtn { border-radius: 20px; background: var(--bg); box-shadow: var(--shadow); }
 .chip, .tog { box-shadow: none; background: var(--surface); border: 2px solid transparent; border-radius: 999px; }
 .chip.on { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+.section .tog, .section .chip { background: var(--bg); box-shadow: inset 0 0 0 1.5px var(--line-strong); }
 .tog.on { background: var(--accent-soft); color: var(--fg); border-color: var(--fg); font-weight: 700; }
 button:disabled { opacity: 0.45; cursor: default; }
 :root[data-theme="dark"] .big.primary .ic.ink, :root[data-theme="dark"] .badge .ic.ink, :root[data-theme="dark"] .partner .replies .tile.on .ic.ink { filter: brightness(0); }
 .chip.on .avatar, .tog.on .avatar { box-shadow: 0 0 0 2px var(--bg); }
 .move { box-shadow: none; border-radius: 28px; border: 3px solid transparent; }
+.big.joke { background: var(--tint-react); }
 .move.mv-hi { background: var(--tint-hi); } .move.mv-react { background: var(--tint-react); } .move.mv-news { background: var(--tint-news); }
 .move.mv-ask { background: var(--tint-ask); } .move.mv-more { background: var(--tint-more); } .move.mv-bye { background: var(--tint-bye); }
 .move.next { border-color: var(--fg); background-clip: padding-box; }
@@ -301,6 +303,10 @@ button:disabled { opacity: 0.45; cursor: default; }
 .cropper { position: relative; width: min(78vw, 300px); aspect-ratio: 1; margin: 0 auto; border-radius: 50%; overflow: hidden; touch-action: none; background: var(--surface-2); box-shadow: 0 0 0 4px var(--fg); }
 .cropper img { position: absolute; left: 0; top: 0; transform-origin: 0 0; user-select: none; -webkit-user-drag: none; pointer-events: none; max-width: none; }
 .facecard { display: flex; align-items: center; gap: 12px; }
+html.big-text .brand { flex-wrap: wrap; }
+.mebtn { border: none; background: none; padding: 0; min-width: 44px; min-height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
+.setupbar { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+html.big-text .setupbar { position: fixed; left: 12px; right: 12px; bottom: calc(84px + env(safe-area-inset-bottom, 0px)); z-index: 7; background: var(--bg); padding: 8px; border-radius: 999px; box-shadow: 0 4px 24px rgba(17, 17, 20, 0.25); max-width: 456px; margin: 0 auto; }
 @keyframes spin { to { transform: rotate(360deg); } }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
 </style>
@@ -310,8 +316,10 @@ button:disabled { opacity: 0.45; cursor: default; }
     <div class="brand">
       <img class="ic m" id="brandIcon" alt="">
       <b>Jump In</b>
+      <button class="mebtn" id="meBtn" data-act="sayMe"></button>
       <span class="status" id="status"><span>Loading</span></span>
     </div>
+    <div id="setupBar"></div>
     <div id="said"></div>
   </div>
   <main id="view"></main>
@@ -338,12 +346,14 @@ function buildIcons(theme) {
   }
 }
 buildIcons('light');
+function iconFix() { ICON.jokes = ICON.lol; }
+iconFix();
 
 const LABELS = {
   again: 'again', all: 'all', bye: 'bye', cake: 'birthday', camera: 'photo', chat: 'message', comeover: 'come over',
   confused: 'really?', do: 'do', done: 'done', excited: 'excited', fire: 'hype', friend: 'friend', gaming: 'games',
   go: 'go', hangout: 'hang out', help: 'help', hero: 'superhero', holdon: 'hold on', home: 'home', howru: 'how are you',
-  idea: 'idea', jordan: 'person', lol: 'funny', lunch: 'lunch', maya: 'person', me: 'me', mic: 'sing', minecraft: 'Minecraft',
+  idea: 'idea', jordan: 'person', lol: 'funny', jokes: 'jokes', lunch: 'lunch', maya: 'person', me: 'me', mic: 'sing', minecraft: 'Minecraft',
   movie: 'movie', music: 'music', myhouse: 'my house', myturn: 'my turn', news: 'news', next: 'next', no: 'no', not: 'not',
   outside: 'outside', phone: 'phone', picture: 'picture', pizza: 'food', plus: 'more', pool: 'swim', qmark: '?',
   question: 'question', rocket: "let's go", same: 'same', saturday: 'day', scary: 'scary', school: 'school', send: 'send',
@@ -363,7 +373,40 @@ const PARTNER_REPLIES = () => [
   P('Cool!', ['smile']), P('Me too!', ['same']), P('LOL', ['lol']),
   P('Yes', ['yes']), P('No', ['no']), P('Awesome!', ['excited']),
   P('Tell me more', ['tellmore']), P('What happened?', ['question']), P('Want to play?', ['gaming'])
-].map(r => { r.words[0].label = r.text.replace(/[!?]+$/, '').toLowerCase(); return r; });
+].map(shortLabel);
+function shortLabel(r) { r.words[0].label = r.text.replace(/[!?.]+$/, '').toLowerCase(); return r; }
+// Replies that fit what Rori just said. Falls back to the general set when nothing matches.
+const R = (text, icon) => shortLabel(P(text, [icon]));
+const REPLY_RULES = [
+  { test: /\b(want to|wanna|can i|can we|let's|do you want)\b/i, replies: () => [R('Yes!', 'yes'), R('Sure!', 'smile'), R('Maybe later', 'wait'), R('No thanks', 'no'), R('When?', 'saturday'), R('Where?', 'outside')] },
+  { test: /\bhow are you|how's it going|what's up\b/i, replies: () => [R('Good!', 'smile'), R('Great!', 'excited'), R('Tired', 'wait'), R('Not great', 'confused'), R('And you?', 'you'), R('Pretty good!', 'yes')] },
+  { test: /\b(joke|why did|what do you call|knock knock)\b/i, replies: () => [R('LOL', 'lol'), R("That's funny!", 'excited'), R('Tell another one!', 'again'), R("I don't get it", 'confused'), R('Good one!', 'smile'), R('I have a joke!', 'idea')] },
+  { test: /^(hi|hey|hello|good morning|good afternoon)\b|good to see you/i, replies: () => [R('Hi!', 'wave'), R('Hey!', 'smile'), R('How are you?', 'howru'), R("What's up?", 'question'), R('Good to see you!', 'excited'), R('What did you do?', 'do')] },
+  { test: /\b(bye|good night|gotta go|see you (later|tomorrow|soon)|talk later)\b/i, replies: () => [R('Bye!', 'bye'), R('See you later!', 'wave'), R('See you tomorrow!', 'school'), R('Text me!', 'textmsg'), R('Have fun!', 'excited'), R('Good night!', 'home')] },
+  { test: /\bhold on|wait\b/i, replies: () => [R("OK, I'll wait", 'wait'), R('Take your time', 'smile'), R("I'm listening", 'ear')] },
+  { test: /\b(sad|tired|scared|hurt|bad day|not good|mad)\b/i, replies: () => [R('Oh no', 'confused'), R('Are you OK?', 'question'), R('Want to talk?', 'chat'), R("I'm sorry", 'same'), R('Want a hug?', 'friend'), R('Can I help?', 'help')] },
+  { test: /\b(what did you do|what are you doing|what's new)\b/i, replies: () => [R('Not much', 'home'), R('I played games', 'gaming'), R('I hung out', 'hangout'), R('I watched a show', 'movie'), R('I went out', 'outside'), R('And you?', 'you')] },
+  { test: /\?\s*$/, replies: () => [R('Yes', 'yes'), R('No', 'no'), R('Maybe', 'confused'), R("I don't know", 'question'), R('What about you?', 'you'), R('Good question!', 'idea')] },
+  { test: /\b(i have news|guess what|i went|i saw|i got|i made|i did|i won|we won|my weekend|i had)\b/i, replies: () => [R('Cool!', 'smile'), R('No way!', 'shocked'), R('Tell me more', 'tellmore'), R('What happened?', 'question'), R('Was it fun?', 'excited'), R('Who was there?', 'friend')] }
+];
+const JOKES = [
+  'Why did the scarecrow win an award? He was outstanding in his field!',
+  'What do you call a sleeping dinosaur? A dino-snore!',
+  "Why can't a bike stand up on its own? It's two tired!",
+  'What do you call a fish with no eyes? A fsh!',
+  'Why did the math book look sad? It had too many problems.',
+  'What do you call cheese that is not yours? Nacho cheese!',
+  'Why did the cookie go to the doctor? It felt crummy.',
+  'What do you call a bear with no teeth? A gummy bear!'
+];
+function partnerReplies(from) {
+  const t = from && from.text ? from.text : '';
+  const rule = from && from.joke ? REPLY_RULES.find(r => r.test.test('joke')) : t && REPLY_RULES.find(r => r.test.test(t));
+  if (!rule) return PARTNER_REPLIES();
+  // Topic replies first, then three general ones so there is always a fallback.
+  const extra = PARTNER_REPLIES().filter(g => ['Cool!', 'Yes', 'No'].includes(g.text) && !rule.replies().some(r => r.text === g.text));
+  return rule.replies().concat(extra).slice(0, 9);
+}
 
 const MOVES = [
   { id: 'hi', name: 'Hi', icon: 'wave' },
@@ -397,9 +440,11 @@ const INTERESTS = {
   movie: { ask: P('Watched anything good?', ['movie', 'qmark']), more: P('Want to watch a movie?', ['movie', 'hangout']) },
   video: { ask: P('Seen any funny videos?', ['video', 'lol']), more: P('Want to see a funny video?', ['video', 'phone']) },
   pool: { ask: P('Been swimming?', ['pool', 'qmark']), more: P('Want to go swimming?', ['pool', 'go']) },
-  pizza: { ask: P('What did you eat?', ['pizza', 'qmark']), more: P('Want to get food?', ['pizza', 'go']) }
+  pizza: { ask: P('What did you eat?', ['pizza', 'qmark']), more: P('Want to get food?', ['pizza', 'go']) },
+  jokes: { ask: P('Know any good jokes?', ['lol', 'qmark']), more: P('Want to hear a joke?', ['lol', 'ear']) }
 };
 const BUILTIN_TOPICS = [
+  { id: 'b-jokes', name: 'Jokes', icon: 'lol', phrases: [P('Want to hear a joke?', ['lol', 'ear']), P('Why did the scarecrow win an award? He was outstanding in his field!', ['lol', 'outside']), P('What do you call a sleeping dinosaur? A dino-snore!', ['lol', 'wait']), P('Why can\'t a bike stand up? It\'s two tired!', ['lol', 'go']), P('Tell me a joke!', ['you', 'lol'])] },
   { id: 'b-weekend', name: 'Weekend', icon: 'saturday', phrases: [P('I had a fun weekend!', ['excited', 'saturday']), P('What did you do?', ['do', 'qmark']), P('I stayed home and chilled.', ['home', 'smile'])] },
   { id: 'b-games', name: 'Games', icon: 'gaming', phrases: [P('I love that game!', ['gaming', 'want']), P('What level are you on?', ['question', 'gaming']), P('Want to play later?', ['gaming', 'hangout'])] },
   { id: 'b-music', name: 'Music', icon: 'music', phrases: [P('I love that song!', ['music', 'want']), P('Who do you listen to?', ['question', 'music']), P('Play it again!', ['again', 'music'])] },
@@ -424,7 +469,7 @@ const DEFAULT_SETTINGS = { speakButtons: true, textSize: 1, theme: 'light' };
 function defaultData() {
   return {
     profile: {
-      v: 2, name: 'Rori', voiceURI: '', rate: 1,
+      v: 2, name: 'Rori', voiceURI: '', rate: 1, likes: ['gaming', 'music', 'jokes'],
       settings: Object.assign({}, DEFAULT_SETTINGS), card: DEFAULT_CARD.map(c => Object.assign({}, c)), custom: {},
       friends: [
         { id: 'f1', name: 'Jordan', color: '#B39CFF', interests: ['minecraft', 'skate'] },
@@ -446,6 +491,7 @@ function upgradeProfile(pr) {
   if (!Array.isArray(pr.card) || !pr.card.length) pr.card = DEFAULT_CARD.map(c => Object.assign({}, c));
   pr.custom = pr.custom || {};
   pr.friends = pr.friends || []; pr.topics = pr.topics || [];
+  if (!Array.isArray(pr.likes)) pr.likes = ['gaming', 'music', 'jokes'];
   return pr;
 }
 
@@ -492,7 +538,7 @@ function buttonLabel(t) {
 function applyTheme() {
   const t = (S.profile.settings && S.profile.settings.theme) || 'light';
   document.documentElement.dataset.theme = t;
-  buildIcons(t);
+  buildIcons(t); iconFix();
   const m = document.querySelector('meta[name="theme-color"]'); if (m) m.content = t === 'dark' ? '#0E1214' : '#F4F6F3';
   const bi = document.getElementById('brandIcon'); if (bi) bi.src = ICON.wave;
 }
@@ -511,11 +557,10 @@ function say(p, opts) {
 /* ---------- context phrases ---------- */
 function friend() { return S.profile.friends.find(f => f.id === S.withId) || null; }
 function interestsInPlay() {
-  const f = friend();
-  if (f) return f.interests;
-  const all = [];
-  S.profile.friends.forEach(fr => fr.interests.forEach(i => { if (!all.includes(i)) all.push(i); }));
-  return all.slice(0, 2);
+  const f = friend(), mine = S.profile.likes || [];
+  // With a friend: things you both like first, then theirs. With anyone: Rori's own likes.
+  if (f) return f.interests.filter(i => mine.includes(i)).concat(f.interests.filter(i => !mine.includes(i)));
+  return mine.slice();
 }
 function sortedNews() { return S.news.slice().sort((a, b) => (b.created || 0) - (a.created || 0)); }
 /* Place-specific phrases come first on Hi, Ask, More and Bye, so tapping School, Lunch, Home or Out changes what is suggested. */
@@ -668,7 +713,9 @@ function afterLoad() {
   if (S.withId && !friend()) S.withId = null;
 }
 let saveTimer = null;
+// In Setup, changes wait for Save or Cancel. Leaving Setup keeps (saves) them.
 function scheduleSave(opts) {
+  if (S.view === 'setup' && S.setupSnap && !(opts && opts.now)) { S.setupDirty = true; updateSetupBar(); return; }
   clearTimeout(saveTimer);
   saveTimer = setTimeout(() => saveProfile(opts && opts.all), 600);
   store.saving = true; renderStatus();
@@ -712,13 +759,28 @@ async function resetAll() {
     } catch (e) {}
   } else { try { localStorage.removeItem(LS_KEY); } catch (e) {} }
   const fresh = defaultData();
+  S.setupDirty = false; S.setupSnap = S.view === 'setup' ? JSON.stringify(fresh.profile) : null;
   S.profile = fresh.profile; S.news = fresh.news; S.withId = null; S.topicId = 't1'; S.last = null; S.step = 0;
   applyTheme(); applyTextSize(); renderStatus(); render();
+}
+function updateSetupBar() {
+  const el = document.getElementById('setupBar'); if (!el) return;
+  renderStatus();
+  el.innerHTML = S.view === 'setup' && S.setupDirty ? `<div class="setupbar" role="group" aria-label="Unsaved changes">
+    <button class="big" data-act="setupCancel">${ic('no', 'm')}Cancel</button>
+    <button class="big primary" data-act="setupSave">${ic('savecheck', 'm')}Save</button>
+  </div>` : '';
+}
+function setupCommit() { S.setupDirty = false; S.setupSnap = JSON.stringify(S.profile); scheduleSave({ now: true }); }
+function renderMe() {
+  const b = document.getElementById('meBtn'); if (!b) return;
+  b.innerHTML = meAvatar(); b.dataset.say = S.profile.name || 'Me'; b.setAttribute('aria-label', S.profile.name || 'Me');
 }
 function renderStatus() {
   const el = document.getElementById('status');
   let icon = 'yes', text = '';
   if (store.error) { icon = 'help'; text = store.error; }
+  else if (S.setupDirty) { icon = 'wait'; text = 'Not saved yet'; }
   else if (store.saving) { icon = 'wait'; text = 'Saving'; }
   else if (store.mode === 'db') { text = 'Saved to your account'; }
   else if (store.mode === 'local') { text = 'Saved on this phone'; }
@@ -819,7 +881,7 @@ function friendAvatar(f, size) {
 function meAvatar(size) {
   const p = S.profile;
   if (p.photo) return `<span class="avatar face ${size || ''}"><img src="${esc(p.photo)}" alt=""></span>`;
-  return `<span class="avatar ${size || ''}" style="background:#FFD6E4">${ic('me')}</span>`;
+  return `<span class="avatar ${size || ''}" style="background:#FFD6E4">${ic('jordan')}</span>`;
 }
 
 function viewTalk() {
@@ -846,6 +908,7 @@ function viewTalk() {
     <div class="row" role="group" aria-label="Who are you talking with">${withChips}</div>
     <div class="moves">${moves}</div>
     ${alts}
+    ${(S.profile.likes || []).includes('jokes') ? `<button class="big wide joke" data-act="tellJoke" data-say="Tell a joke">${ic('lol')}Tell a joke</button>` : ''}
     <div class="yesno">
       <button class="tile" data-act="quickSay" data-k="yes">${ic('yes', 'm')}Yes</button>
       <button class="tile" data-act="quickSay" data-k="no">${ic('no', 'm')}No</button>
@@ -962,6 +1025,7 @@ function viewSetup() {
   return `
     <div class="section">
       <h2><button class="hd h2btn" data-act="sayLabel">${ic('me', 'm')}About me${ic('speaker', 'xs')}</button></h2>
+      <div class="field"><label class="label" for="f-name">${ic('me', 's')}My name</label><input class="input" id="f-name" data-bind="name" value="${esc(p.name)}" autocomplete="off"></div>
       <div class="facecard">
         ${meAvatar('xl')}
         <div class="flexrow" style="flex-wrap:wrap">
@@ -970,7 +1034,8 @@ function viewSetup() {
         </div>
       </div>
       <input type="file" id="faceIn" class="vh" accept="image/*" tabindex="-1" aria-hidden="true">
-      <div class="field"><label class="label" for="f-name">${ic('me', 's')}My name</label><input class="input" id="f-name" data-bind="name" value="${esc(p.name)}" autocomplete="off"></div>
+      <button class="label hd" data-act="sayLabel">${ic('want', 's')}I like${ic('speaker', 'xs')}</button>
+      <div class="toggles">${Object.keys(INTERESTS).map(k => { const on = (p.likes || []).includes(k); return `<button class="tog ${on ? 'on' : ''}" data-act="interest" data-id="me" data-k="${k}" aria-pressed="${on}">${ic(k, 'm')}${esc(LABELS[k])}</button>`; }).join('')}</div>
     </div>
     <div class="section">
       <h2><button class="hd h2btn" data-act="sayLabel">${ic('voice', 'm')}My voice${ic('speaker', 'xs')}</button></h2>
@@ -1035,6 +1100,8 @@ function render() {
   view.innerHTML = S.view === 'talk' ? viewTalk() : S.view === 'group' ? viewGroup() : S.view === 'news' ? viewNews() : viewSetup();
   renderTabs();
   renderSaid();
+  renderMe();
+  updateSetupBar();
   const ri = document.getElementById('restoreIn');
   if (ri) ri.addEventListener('change', onRestore);
   const fi = document.getElementById('faceIn');
@@ -1050,7 +1117,7 @@ async function onRestore(ev) {
     const data = JSON.parse(await file.text());
     if (!data || data.app !== 'jump-in' || !data.profile) throw new Error('not a backup');
     S.profile = upgradeProfile(data.profile); S.news = Array.isArray(data.news) ? data.news : [];
-    afterLoad(); applyTheme(); applyTextSize(); await saveProfile(true);
+    afterLoad(); applyTheme(); applyTextSize(); await saveProfile(true); S.setupDirty = false; S.setupSnap = S.view === 'setup' ? JSON.stringify(S.profile) : null;
     S.backupMsg = 'Restored. Everything from the backup is back.'; S.backupErr = false; speakButton('Restored');
   } catch (e) { S.backupMsg = 'That file is not a Jump In backup.'; S.backupErr = true; speakButton(S.backupMsg); }
   renderStatus(); render();
@@ -1071,7 +1138,7 @@ function renderLayer() {
       <h2 class="turnbar"><button class="hd h2btn" data-act="sayLabel">${pf ? friendAvatar(pf, 'lg') : `<span class="avatar lg plain">${ic('friend')}</span>`}${esc(turn)}${ic('speaker', 'xs')}</button></h2>
       <div class="chips" role="group" aria-label="Who is talking">${chips}</div>
       ${rp ? `<button class="said-by" data-act="partnerReplay" data-say="${esc(me)} said ${esc(rp.text)}">${meAvatar('lg')}${phraseIcon(rp)}<span class="who">${esc(me)} said</span><span class="what">${esc(rp.text)}</span></button>` : ''}
-      <div class="replies">${PARTNER_REPLIES().map((r, i) => `<button class="tile ${S.partnerLast === i ? 'on' : ''}" data-act="partnerSay" data-i="${i}" aria-pressed="${S.partnerLast === i}">${ic(r.words[0].icon, 'l')}${esc(r.text)}</button>`).join('')}</div>
+      <div class="replies">${partnerReplies(rp).map((r, i) => `<button class="tile ${S.partnerLast === i ? 'on' : ''}" data-act="partnerSay" data-i="${i}" aria-pressed="${S.partnerLast === i}">${ic(r.words[0].icon, 'l')}${esc(r.text)}</button>`).join('')}</div>
       <button class="big primary wide back" data-act="partnerDone">${meAvatar('lg')}Back to ${esc(me)}</button>
     </div>`;
     return;
@@ -1295,7 +1362,18 @@ function advance(moveId) {
   S.step = moveId === 'bye' ? 0 : (i + 1) % ORDER.length;
 }
 const actions = {
-  tab(t) { S.view = t.dataset.id; S.openMove = null; S.confirmReset = false; render(); window.scrollTo(0, 0); },
+  tab(t) {
+    if (S.view === 'setup' && t.dataset.id !== 'setup' && S.setupDirty) setupCommit();
+    S.view = t.dataset.id; S.openMove = null; S.confirmReset = false;
+    S.setupSnap = S.view === 'setup' ? JSON.stringify(S.profile) : null; S.setupDirty = false;
+    render(); window.scrollTo(0, 0);
+  },
+  setupSave() { setupCommit(); render(); return 'Saved'; },
+  setupCancel() {
+    S.profile = upgradeProfile(JSON.parse(S.setupSnap)); S.setupDirty = false;
+    applyTheme(); applyTextSize(); render(); return 'Changes cancelled';
+  },
+  sayMe() {},
   place(t) {
     const before = MOVES.map(m => (phrasesFor(m.id)[0] || {}).text);
     S.place = t.dataset.id; S.openMove = null; render();
@@ -1324,6 +1402,10 @@ const actions = {
     S.draft = { text: '', icon: 'plus' }; scheduleSave(); renderLayer();
   },
   customDelete(t) { const list = S.profile.custom && S.profile.custom[S.pageMove]; if (!list) return; list.splice(Number(t.dataset.i), 1); scheduleSave(); renderLayer(); },
+  tellJoke() {
+    const j = JOKES[(S.jokeAt = ((S.jokeAt ?? -1) + 1) % JOKES.length)];
+    say(Object.assign(P(j, ['lol']), { joke: true }));
+  },
   quickSay(t) {
     const q = { yes: P('Yes!', ['yes']), no: P('No.', ['no']), maybe: P('Maybe.', ['confused']), again: P('Can you say that again?', ['again', 'qmark']) }[t.dataset.k];
     if (q) say(q);
@@ -1342,7 +1424,7 @@ const actions = {
   partnerWho(t) { S.partnerId = t.dataset.id || null; renderLayer(); },
   partnerReplay() { if (S.partnerFrom) speak(S.partnerFrom.text); return ''; },
   partnerSay(t) {
-    const i = Number(t.dataset.i); const r = PARTNER_REPLIES()[i];
+    const i = Number(t.dataset.i); const r = partnerReplies(S.partnerFrom)[i];
     const pf = S.profile.friends.find(f => f.id === S.partnerId);
     speak(r.text, { partner: true });
     S.partnerLast = i; S.last = { ...r, by: pf ? pf.name : 'Friend' }; S.holding = false;
@@ -1371,12 +1453,15 @@ const actions = {
     const name = `jump-in-backup-${new Date().toISOString().slice(0, 10)}.json`;
     const file = typeof File === 'function' ? new File([blob], name, { type: 'application/json' }) : null;
     // On iPhone the share sheet lets you save the file to Files, AirDrop it or email it.
-    if (file && navigator.canShare && navigator.canShare({ files: [file] })) {
-      navigator.share({ files: [file], title: 'Jump In backup' }).catch(() => {});
-    } else {
-      const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name;
-      document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
-    }
+    const download = () => {
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; a.rel = 'noopener';
+      document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 4000);
+    };
+    // Phones get the share sheet (Save to Files); computers download the file.
+    const phone = window.matchMedia && matchMedia('(pointer: coarse)').matches;
+    if (phone && file && navigator.canShare && navigator.canShare({ files: [file] })) {
+      navigator.share({ files: [file], title: 'Jump In backup' }).catch(e => { if (!e || e.name !== 'AbortError') download(); else { S.backupMsg = ''; render(); } });
+    } else download();
     S.backupMsg = 'Backup made. Keep the file somewhere safe, like the Files app.'; S.backupErr = false; render();
   },
   newsEditToggle() { S.newsEdit = !S.newsEdit; render(); },
@@ -1425,11 +1510,13 @@ const actions = {
   friendDelete(t) { S.profile.friends = S.profile.friends.filter(f => f.id !== t.dataset.id); if (S.withId === t.dataset.id) S.withId = null; scheduleSave(); render(); },
   friendColor(t) { const f = S.profile.friends.find(x => x.id === t.dataset.id); if (!f) return; f.color = FRIEND_COLORS[(FRIEND_COLORS.indexOf(f.color) + 1) % FRIEND_COLORS.length]; scheduleSave(); render(); },
   interest(t) {
-    const f = S.profile.friends.find(x => x.id === t.dataset.id); if (!f) return; const k = t.dataset.k;
-    const on = !f.interests.includes(k);
-    // Up to 3 interests; adding a 4th turns off the oldest, and says so.
-    const dropped = on && f.interests.length >= 3 ? f.interests[0] : null;
-    f.interests = on ? f.interests.concat(k).slice(-3) : f.interests.filter(x => x !== k);
+    const isMe = t.dataset.id === 'me';
+    const f = isMe ? null : S.profile.friends.find(x => x.id === t.dataset.id); if (!isMe && !f) return; const k = t.dataset.k;
+    const list = isMe ? S.profile.likes : f.interests;
+    const on = !list.includes(k);
+    const dropped = null;
+    const next = on ? list.concat(k) : list.filter(x => x !== k);
+    if (isMe) S.profile.likes = next; else f.interests = next;
     scheduleSave(); render();
     return `${LABELS[k]}, ${on ? 'on' : 'off'}${dropped ? `. ${LABELS[dropped]}, off` : ''}`;
   },
@@ -1483,7 +1570,7 @@ document.addEventListener('click', ev => {
   // Buttons that already speak a phrase keep their own speech; every other tap says the button's name.
   if (!SPEAKS_ITSELF.has(act)) speakButton(typeof out === 'string' ? out : label);
 });
-const SPEAKS_ITSELF = new Set(['partnerSay', 'partnerReplay', 'move', 'alt', 'pageSay', 'quickSay', 'hold', 'replay', 'react', 'join', 'newsSay', 'askBack', 'groupAsk', 'newsFollow', 'testVoice', 'toggleSpeakButtons']);
+const SPEAKS_ITSELF = new Set(['tellJoke', 'partnerSay', 'partnerReplay', 'move', 'alt', 'pageSay', 'quickSay', 'hold', 'replay', 'react', 'join', 'newsSay', 'askBack', 'groupAsk', 'newsFollow', 'testVoice', 'toggleSpeakButtons']);
 // The restore control is a label (it opens the file picker), so speak it here.
 document.addEventListener('click', ev => {
   const l = ev.target.closest('label[for="restoreIn"], label[for="photoIn"]');
