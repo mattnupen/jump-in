@@ -216,6 +216,20 @@ input[type=range] { width: 100%; accent-color: var(--accent); height: 44px; }
 .sheet-head { display: flex; align-items: center; gap: 10px; }
 .sheet-head h2 { margin: 0; font-family: var(--font-display); font-weight: 800; font-size: 1.375rem; flex: 1; }
 .picker { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.partner { position: fixed; inset: 0; z-index: 30; background: var(--bg); color: var(--fg); overflow-y: auto; padding: calc(14px + env(safe-area-inset-top, 0px)) 16px calc(20px + env(safe-area-inset-bottom, 0px)); display: flex; flex-direction: column; gap: 12px; }
+.partner .turnbar { margin: 0; background: var(--accent); color: var(--accent-ink); border-radius: 20px; padding: 6px 14px; }
+.partner .turnbar .h2btn { font-family: var(--font-display); font-weight: 800; font-size: 1.5rem; gap: 10px; min-height: 52px; }
+.partner .turnbar .ic.xs { filter: brightness(0) invert(1); opacity: 1; }
+:root[data-theme="dark"] .partner .turnbar .ic.xs { filter: none; }
+.partner .chips { display: flex; gap: 8px; overflow-x: auto; padding: 2px; }
+.partner .said-by { display: flex; align-items: center; gap: 10px; background: var(--surface); border: none; box-shadow: inset 0 0 0 1px var(--line); border-radius: 16px; padding: 10px 12px; min-height: 60px; text-align: left; color: var(--fg); font: inherit; }
+.partner .said-by .who { font-size: 0.9375rem; color: var(--muted); flex-shrink: 0; }
+.partner .said-by .what { font-weight: 700; font-size: 1.125rem; }
+.partner .replies { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.partner .replies .tile { min-height: 104px; }
+.partner .replies .tile.on { box-shadow: inset 0 0 0 3px var(--accent); background: var(--accent-soft); }
+.partner .back { margin-top: auto; min-height: 64px; font-family: var(--font-display); font-size: 1.25rem; }
+html.big-text .partner .replies { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .show { position: fixed; inset: 0; z-index: 30; background: var(--accent); color: var(--accent-ink); overflow-y: auto; padding: calc(16px + env(safe-area-inset-top, 0px)) 20px calc(24px + env(safe-area-inset-bottom, 0px)); display: flex; flex-direction: column; gap: 16px; }
 .show .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
 .show .cell.solo { grid-column: 1 / -1; min-height: 200px; }
@@ -295,6 +309,12 @@ const ic = (k, cls) => ICON[k] ? `<img class="ic ${cls || ''}" src="${ICON[k]}" 
 const newId = () => Math.random().toString(36).slice(2, 10);
 const words = (keys) => keys.map(k => ({ icon: k, label: LABELS[k] || k }));
 const P = (text, keys) => ({ text, words: words(keys) });
+// What a friend can say back on Rori's phone (partner modeling).
+const PARTNER_REPLIES = () => [
+  P('Cool!', ['smile']), P('Me too!', ['same']), P('LOL', ['lol']),
+  P('Yes', ['yes']), P('No', ['no']), P('Awesome!', ['excited']),
+  P('Tell me more', ['tellmore']), P('What happened?', ['question']), P('Want to play?', ['gaming'])
+];
 
 const MOVES = [
   { id: 'hi', name: 'Hi', icon: 'wave' },
@@ -403,9 +423,10 @@ function loadVoices() {
 }
 function typing() { const a = document.activeElement; return !!(a && a.matches && a.matches('input, select')); }
 try { loadVoices(); window.speechSynthesis.onvoiceschanged = () => { loadVoices(); if (S.view === 'setup' && !typing()) render(); }; } catch (e) {}
-function speak(text) {
+function speak(text, opts) {
   try {
     const u = new SpeechSynthesisUtterance(text);
+    if (opts && opts.partner) u.pitch = 1.35;
     const v = voices.find(v => v.voiceURI === S.profile.voiceURI);
     if (v) u.voice = v;
     u.rate = Number(S.profile.rate) || 1;
@@ -728,10 +749,10 @@ function renderSaidInto() {
   el.innerHTML = `<div class="said ${S.holding ? 'hold' : ''}">
     <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px">
       <div class="words">${wordStrip(p.words)}</div>
-      <div class="text">${S.holding ? 'Friends heard: ' : ''}"${esc(p.text)}"</div>
+      <div class="text">${S.holding ? 'Friends heard: ' : ''}${p.by ? esc(p.by) + ' said: ' : ''}"${esc(p.text)}"</div>
     </div>
     <button class="roundbtn" data-act="replay" data-say="Again">${ic('speaker')}Again</button>
-    <button class="roundbtn" data-act="show" data-say="Show friends">${ic('showfriends')}Show</button>
+    <button class="roundbtn" data-act="show" data-say="Your turn">${ic('showfriends')}Your turn</button>
   </div>`;
 }
 function renderTabs() {
@@ -773,7 +794,7 @@ function viewTalk() {
     </div>
     <div class="quick">
       <button class="big warn" data-act="hold">${ic('holdon')}Hold on</button>
-      <button class="big" data-act="show">${ic('showfriends')}Show friends</button>
+      <button class="big" data-act="show">${ic('showfriends')}Your turn</button>
     </div>
     ${lunchHint}
     <button class="small" data-act="restart" style="align-self:center">${ic('again', 's')}New conversation</button>`;
@@ -793,7 +814,7 @@ function viewGroup() {
     <div class="ptiles">${GROUP_ASK.map((p, i) => `<button class="ptile" data-act="groupAsk" data-i="${i}">${phraseIcon(p)}<span>${esc(p.text)}</span></button>`).join('')}</div>
     <div class="quick">
       <button class="big warn" data-act="hold">${ic('holdon')}Hold on</button>
-      <button class="big" data-act="show">${ic('showfriends')}Show friends</button>
+      <button class="big" data-act="show">${ic('showfriends')}Your turn</button>
     </div>`;
 }
 
@@ -963,13 +984,18 @@ function renderLayer() {
   const el = document.getElementById('layer');
   if (!S.layer) { el.innerHTML = ''; return; }
   if (S.layer === 'show') {
-    const p = S.last || P(`Hi! I'm ${S.profile.name || 'here'}.`, ['wave', 'me']);
-    el.innerHTML = `<div class="show" role="dialog" aria-modal="true" aria-label="Show friends">
-      <button class="closer" data-act="closeLayer">${ic('bye', 's')}Close</button>
-      <div class="flexrow" style="gap:10px">${ic('jordan', 'l')}<span style="font-family:var(--font-display);font-weight:800;font-size:26px">${S.profile.name ? esc(S.profile.name) + ' says' : 'I want to say'}</span></div>
-      <div class="grid">${p.words.slice(0, 4).map((w, i, a) => `<div class="cell ${a.length === 1 || (a.length === 3 && i === 2) ? 'solo' : ''}">${ic(w.icon, 'xl')}<span>${esc(w.label)}</span></div>`).join('')}</div>
-      <div class="sentence">${esc(p.text)}</div>
-      <div class="tip">${ic('holdon', 'l')}<span>I talk with pictures. Give me a few seconds to answer.</span></div>
+    const me = S.profile.name || 'me';
+    const pf = S.profile.friends.find(f => f.id === S.partnerId) || null;
+    const turn = pf ? `${pf.name}'s turn` : 'Your turn';
+    const rp = S.partnerFrom;
+    const chips = [...S.profile.friends.map(f => `<button class="chip ${S.partnerId === f.id ? 'on' : ''}" data-act="partnerWho" data-id="${esc(f.id)}" aria-pressed="${S.partnerId === f.id}">${friendAvatar(f)}${esc(f.name)}</button>`),
+      `<button class="chip ${!pf ? 'on' : ''}" data-act="partnerWho" data-id="" aria-pressed="${!pf}" data-say="Someone">${ic('friend')}Someone</button>`].join('');
+    el.innerHTML = `<div class="partner" role="dialog" aria-modal="true" aria-label="${esc(turn)}">
+      <h2 class="turnbar"><button class="hd h2btn" data-act="sayLabel">${pf ? friendAvatar(pf) : ic('friend', 'm')}${esc(turn)}${ic('speaker', 'xs')}</button></h2>
+      <div class="chips" role="group" aria-label="Who is talking">${chips}</div>
+      ${rp ? `<button class="said-by" data-act="partnerReplay" data-say="${esc(me)} said ${esc(rp.text)}">${phraseIcon(rp)}<span class="who">${esc(me)} said</span><span class="what">${esc(rp.text)}</span></button>` : ''}
+      <div class="replies">${PARTNER_REPLIES().map((r, i) => `<button class="tile ${S.partnerLast === i ? 'on' : ''}" data-act="partnerSay" data-i="${i}">${ic(r.words[0].icon, 'l')}${esc(r.text)}</button>`).join('')}</div>
+      <button class="big primary wide back" data-act="partnerDone">${ic('myturn', 'l')}Back to ${esc(me)}</button>
     </div>`;
     return;
   }
@@ -1010,7 +1036,7 @@ function renderLayer() {
       ${body}
       <div class="quick">
         <button class="big warn" data-act="hold">${ic('holdon')}Hold on</button>
-        <button class="big" data-act="show">${ic('showfriends')}Show friends</button>
+        <button class="big" data-act="show">${ic('showfriends')}Your turn</button>
       </div>
     </div>`;
     return;
@@ -1126,7 +1152,17 @@ const actions = {
     if (p) say(p);
   },
   hold() { say(HOLD, { hold: true }); },
-  show() { S.layer = 'show'; renderLayer(); },
+  show() { S.partnerId = S.withId; S.partnerFrom = S.last && !S.last.by ? S.last : null; S.partnerLast = null; S.layer = 'show'; renderLayer(); },
+  partnerWho(t) { S.partnerId = t.dataset.id || null; renderLayer(); },
+  partnerReplay() { if (S.partnerFrom) speak(S.partnerFrom.text); return ''; },
+  partnerSay(t) {
+    const i = Number(t.dataset.i); const r = PARTNER_REPLIES()[i];
+    const pf = S.profile.friends.find(f => f.id === S.partnerId);
+    speak(r.text, { partner: true });
+    S.partnerLast = i; S.last = { ...r, by: pf ? pf.name : 'Friend' }; S.holding = false;
+    renderSaid(); renderLayer();
+  },
+  partnerDone() { S.layer = S.pageMove ? 'page' : null; renderLayer(); render(); },
   replay() { if (S.last) speak(S.last.text); },
   restart() { S.step = 0; S.openMove = null; S.last = null; S.holding = false; render(); },
   topic(t) { S.topicId = t.dataset.id; render(); },
@@ -1261,7 +1297,7 @@ document.addEventListener('click', ev => {
   // Buttons that already speak a phrase keep their own speech; every other tap says the button's name.
   if (!SPEAKS_ITSELF.has(act)) speakButton(typeof out === 'string' ? out : label);
 });
-const SPEAKS_ITSELF = new Set(['move', 'alt', 'pageSay', 'quickSay', 'hold', 'replay', 'react', 'join', 'newsSay', 'askBack', 'groupAsk', 'newsFollow', 'testVoice', 'toggleSpeakButtons']);
+const SPEAKS_ITSELF = new Set(['partnerSay', 'partnerReplay', 'move', 'alt', 'pageSay', 'quickSay', 'hold', 'replay', 'react', 'join', 'newsSay', 'askBack', 'groupAsk', 'newsFollow', 'testVoice', 'toggleSpeakButtons']);
 // The restore control is a label (it opens the file picker), so speak it here.
 document.addEventListener('click', ev => {
   const l = ev.target.closest('label[for="restoreIn"], label[for="photoIn"]');
