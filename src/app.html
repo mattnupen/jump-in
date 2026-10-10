@@ -1,5 +1,5 @@
 <title>Jump In</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=DM+Sans:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=DM+Sans:wght@400;500;700&family=Bangers&family=Nunito:wght@700;900&display=swap">
 <style>
 /* Layout: one phone-width column; status bar, scrolling view, fixed tab bar. */
 /* Light is the default theme; Setup > Look switches to dark. Every text pair below is 4.5:1 or better. */
@@ -307,6 +307,64 @@ html.big-text .brand { flex-wrap: wrap; }
 .mebtn { border: none; background: none; padding: 0; min-width: 44px; min-height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
 .setupbar { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
 html.big-text .setupbar { position: fixed; left: 12px; right: 12px; bottom: calc(84px + env(safe-area-inset-bottom, 0px)); z-index: 7; background: var(--bg); padding: 8px; border-radius: 999px; box-shadow: 0 4px 24px rgba(17, 17, 20, 0.25); max-width: 456px; margin: 0 auto; }
+/* ---------- Comic Pop style: thick black outlines, hard shadows, halftone paper. A light look, so light-only rules still apply. ---------- */
+:root[data-theme="comic"] {
+  --bg: #FFF4D6;
+  --surface: #FFFFFF;
+  --surface-2: #FFF9E8;
+  --line: #111111;
+  --line-strong: #111111;
+  --fg: #111111;
+  --fg-2: #111111;
+  --muted: #3B372E;
+  --placeholder: #4A463C;
+  --accent: #1E5BD6;
+  --accent-ink: #FFFFFF;
+  --accent-soft: #DCE7FF;
+  --pop: #FFD600;
+  --pop-ink: #111111;
+  --glow: rgba(30, 91, 214, 0.35);
+  --hold-bg: #FFD3B5;
+  --sel: #8FE3FF;
+  --tabbar: #FFFFFF;
+  --knob: #6B675C;
+  --shadow: 3px 3px 0 #111111;
+  --tint-hi: #FFF6C2; --tint-react: #FF9EC0; --tint-news: #FFC08A; --tint-ask: #9CC8FF; --tint-more: #CDB8FF; --tint-bye: #93E6AE;
+  --ring: conic-gradient(#FFD600, #FF5FA2, #1E5BD6, #19C37D, #FFD600);
+  --font-display: 'Bangers', 'Impact', 'Arial Black', sans-serif;
+  --font-body: 'Nunito', -apple-system, 'Segoe UI', sans-serif;
+  --ink: 3px solid #111111;
+  --hard: 4px 4px 0 #111111;
+}
+:root[data-theme="comic"] body { background-color: var(--bg); background-image: radial-gradient(rgba(255, 90, 60, 0.20) 1.6px, transparent 2px); background-size: 9px 9px; font-weight: 700; }
+:root[data-theme="comic"] .top, :root[data-theme="comic"] .page-head { background: var(--bg); }
+:root[data-theme="comic"] .brand b { font-weight: 400; font-size: 1.75rem; letter-spacing: 1.5px; text-transform: uppercase; line-height: 1; }
+:root[data-theme="comic"] .move .name, :root[data-theme="comic"] .page-head h2, :root[data-theme="comic"] .section h2, :root[data-theme="comic"] .sheet-head h2, :root[data-theme="comic"] .partner .turnbar .h2btn, :root[data-theme="comic"] .show .sentence { font-weight: 400; letter-spacing: 1px; }
+:root[data-theme="comic"] .move .name { font-size: 1.75rem; text-transform: uppercase; line-height: 1; overflow-wrap: anywhere; min-width: 0; }
+:root[data-theme="comic"] .said, :root[data-theme="comic"] .move, :root[data-theme="comic"] .big, :root[data-theme="comic"] .tile, :root[data-theme="comic"] .ptile, :root[data-theme="comic"] .card, :root[data-theme="comic"] .section, :root[data-theme="comic"] .alts, :root[data-theme="comic"] .roundbtn, :root[data-theme="comic"] .partner .said-by, :root[data-theme="comic"] .partner .turnbar { border: var(--ink); box-shadow: var(--hard); border-radius: 16px; }
+:root[data-theme="comic"] .chip, :root[data-theme="comic"] .tog, :root[data-theme="comic"] .small, :root[data-theme="comic"] .seg button, :root[data-theme="comic"] .switch, :root[data-theme="comic"] .join, :root[data-theme="comic"] .morebtn, :root[data-theme="comic"] .iconbtn { border: var(--ink); box-shadow: none; border-radius: 14px; background: #FFFFFF; }
+:root[data-theme="comic"] .section .tog, :root[data-theme="comic"] .section .chip { background: #FFFFFF; box-shadow: none; }
+:root[data-theme="comic"] .chip.on, :root[data-theme="comic"] .tog.on, :root[data-theme="comic"] .seg button.on, :root[data-theme="comic"] .card.on { background: var(--sel); color: var(--pop-ink); border-color: #111111; box-shadow: 3px 3px 0 #111111; }
+:root[data-theme="comic"] .switch.on { border-color: #111111; background: var(--sel); }
+:root[data-theme="comic"] .switch.on .knob { background: #111111; }
+:root[data-theme="comic"] .switch.on .knob::after { background: #FFFFFF; }
+:root[data-theme="comic"] .move.next { border-color: #111111; box-shadow: 7px 7px 0 #111111; animation: none; }
+:root[data-theme="comic"] .move:active, :root[data-theme="comic"] .big:active, :root[data-theme="comic"] .tile:active, :root[data-theme="comic"] .ptile:active { transform: translate(3px, 3px); box-shadow: 1px 1px 0 #111111; }
+:root[data-theme="comic"] .badge { background: var(--pop); color: #111111; box-shadow: none; border: 2px solid #111111; }
+:root[data-theme="comic"] .big.primary { background: var(--pop); color: #111111; }
+:root[data-theme="comic"] .big.warn { background: var(--hold-bg); }
+:root[data-theme="comic"] .big.joke { background: var(--tint-react); }
+:root[data-theme="comic"] .tabs { background: #FFFFFF; border-top: 3px solid #111111; box-shadow: none; backdrop-filter: none; -webkit-backdrop-filter: none; }
+:root[data-theme="comic"] .tab { border-radius: 14px; color: #111111; }
+:root[data-theme="comic"] .tab.on { background: #111111; color: #FFFFFF; border: 3px solid #111111 !important; box-shadow: 3px 3px 0 #111111; }
+:root[data-theme="comic"] .partner, :root[data-theme="comic"] .page, :root[data-theme="comic"] .sheet { background: var(--bg); }
+:root[data-theme="comic"] .sheet { border-top: var(--ink); }
+:root[data-theme="comic"] .partner .replies .tile.on { background: var(--sel); color: #111111; box-shadow: 4px 4px 0 #111111; }
+:root[data-theme="comic"] .input { border: var(--ink); background: #FFFFFF; }
+:root[data-theme="comic"] .sub { background: var(--surface-2); border: 2px solid #111111; }
+:root[data-theme="comic"] .wordsrow .word { background: var(--surface-2); border: 2px solid #111111; }
+:root[data-theme="comic"] .cropper { box-shadow: 0 0 0 4px #111111, 6px 6px 0 4px #111111; }
+.seg.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 @keyframes spin { to { transform: rotate(360deg); } }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
 </style>
@@ -538,8 +596,8 @@ function buttonLabel(t) {
 function applyTheme() {
   const t = (S.profile.settings && S.profile.settings.theme) || 'light';
   document.documentElement.dataset.theme = t;
-  buildIcons(t); iconFix();
-  const m = document.querySelector('meta[name="theme-color"]'); if (m) m.content = t === 'dark' ? '#0E1214' : '#F4F6F3';
+  buildIcons(t === 'dark' ? 'dark' : 'light'); iconFix();
+  const m = document.querySelector('meta[name="theme-color"]'); if (m) m.content = t === 'dark' ? '#0B0B0F' : t === 'comic' ? '#FFF4D6' : '#FFFFFF';
   const bi = document.getElementById('brandIcon'); if (bi) bi.src = ICON.wave;
 }
 function applyTextSize() {
@@ -1047,9 +1105,10 @@ function viewSetup() {
     </div>
     <div class="section">
       <h2><button class="hd h2btn" data-act="sayLabel">${ic('outside', 'm')}Look${ic('speaker', 'xs')}</button></h2>
-      <div class="seg" role="group" aria-label="Look">
-        <button class="${st.theme !== 'dark' ? 'on' : ''}" data-act="theme" data-v="light" aria-pressed="${st.theme !== 'dark'}">${ic('outside', 'm')}Light</button>
+      <div class="seg three" role="group" aria-label="Look">
+        <button class="${!['dark', 'comic'].includes(st.theme) ? 'on' : ''}" data-act="theme" data-v="light" aria-pressed="${!['dark', 'comic'].includes(st.theme)}">${ic('outside', 'm')}Light</button>
         <button class="${st.theme === 'dark' ? 'on' : ''}" data-act="theme" data-v="dark" aria-pressed="${st.theme === 'dark'}">${ic('saturday', 'm')}Dark</button>
+        <button class="${st.theme === 'comic' ? 'on' : ''}" data-act="theme" data-v="comic" aria-pressed="${st.theme === 'comic'}">${ic('lol', 'm')}Comic</button>
       </div>
     </div>
     <div class="section">
