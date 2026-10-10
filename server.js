@@ -97,8 +97,18 @@ function serveStatic(req, res) {
   });
 }
 
+// The iPhone app loads its pages from capacitor://localhost and calls this server for suggestions.
+const APP_ORIGINS = ['capacitor://localhost', 'ionic://localhost'];
+
 http.createServer((req, res) => {
   const url = req.url || '/';
+  if (APP_ORIGINS.includes(req.headers.origin) && url.startsWith('/api/')) {
+    res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.setHeader('Vary', 'Origin');
+    if (req.method === 'OPTIONS') { res.writeHead(204, { 'Access-Control-Max-Age': '86400' }); return res.end(); }
+  }
   if (url === '/api/status') return send(res, 200, { ai: !!API_KEY, images: !!API_KEY });
   if (url === '/healthz') return send(res, 200, { ok: true });
   if (url === '/api/suggest' && req.method === 'POST') return suggest(req, res);

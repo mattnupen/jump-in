@@ -1,0 +1,10 @@
+{
+  "appId": "com.mattnupen.jumpin",
+  "appName": "Jump In",
+  "webDir": "www",
+  "backgroundColor": "#FFFFFF",
+  "ios": {
+    "contentInset": "never",
+    "limitsNavigationsToAppBoundDomains": false
+  }
+}

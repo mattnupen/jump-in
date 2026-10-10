@@ -733,9 +733,10 @@ let sampleFn = null, sampleImages = false, sampleOff = false;
     if (window.claude && typeof window.claude.use === 'function') {
       sampleFn = await window.claude.use('sample');
       if (sampleFn) { const lim = await sampleFn.limits().catch(() => null); sampleImages = !!(lim && lim.images); }
-    } else if (location.protocol.startsWith('http')) {
+    } else if (location.protocol.startsWith('http') || window.JUMPIN_API) {
       // Hosted on our own server (Render): suggestions go through /api/suggest, which holds the API key.
-      const st = await fetch('/api/status').then(r => r.ok ? r.json() : null).catch(() => null);
+      // The iPhone app sets window.JUMPIN_API to the hosted server's address.
+      const st = await fetch((window.JUMPIN_API || '') + '/api/status').then(r => r.ok ? r.json() : null).catch(() => null);
       if (st && st.ai) { sampleFn = serverSample; sampleImages = !!st.images; }
     }
   } catch (e) { sampleFn = null; }
@@ -750,7 +751,7 @@ const serverSample = {
     const imgs = o.images ? [].concat(o.images) : [];
     const images = [];
     for (const b of imgs) images.push({ media_type: b.type || 'image/jpeg', data: await blobToBase64(b) });
-    const r = await fetch('/api/suggest', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prompt, images, tier: o.modelTier || 'default' }) });
+    const r = await fetch((window.JUMPIN_API || '') + '/api/suggest', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prompt, images, tier: o.modelTier || 'default' }) });
     const out = await r.json().catch(() => ({}));
     if (!r.ok) { const e = new Error(out.error || 'failed'); e.code = out.code || 'unavailable'; throw e; }
     return out.json;

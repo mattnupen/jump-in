@@ -72,6 +72,45 @@ The free Render plan goes to sleep after about 15 minutes with no visitors, so t
 3. Open Jump In from the home screen. It runs full screen like an app.
 4. If you hear nothing, flip the silent switch on the side of the phone off.
 
+## iPhone app (TestFlight)
+
+`mobile/` wraps the same web app as a real iPhone app with [Capacitor](https://capacitorjs.com). The app carries every page and picture inside it, so it opens with no signal and no Render wake-up wait; only **Suggest** calls the Render server. Speech plays even with the silent switch on.
+
+A GitHub Actions workflow (`.github/workflows/testflight.yml`) builds it on a cloud Mac and uploads it to TestFlight, so no Mac or Xcode is needed.
+
+### One-time Apple setup
+
+1. **Join the Apple Developer Program** ($99/year) at https://developer.apple.com/programs/enroll. Approval can take a day or two.
+2. **Register the app ID.** At https://developer.apple.com/account/resources/identifiers/list click **+**, choose **App IDs**, then **App**. Description `Jump In`, Bundle ID **Explicit** `com.mattnupen.jumpin`. Leave the capabilities alone and click **Register**.
+3. **Create the app record.** In https://appstoreconnect.apple.com go to **Apps**, click **+**, then **New App**. Platform iOS, name `Jump In` (if taken, try `Jump In AAC`), language English (U.S.), bundle ID `com.mattnupen.jumpin`, SKU `jump-in`, access Full Access.
+4. **Make an API key** so GitHub can sign and upload. In App Store Connect go to **Users and Access**, then **Integrations**, then **App Store Connect API** (request access the first time). Under **Team Keys** click **+**, name it `GitHub TestFlight`, role **Admin** (needed so it can create the signing certificate), and click **Generate**. Write down the **Issuer ID** (top of the page) and the **Key ID**, then click **Download** to get the `AuthKey_XXXX.p8` file. Apple lets you download it only once.
+5. **Find your Team ID.** It is on https://developer.apple.com/account under **Membership details** (10 letters and numbers).
+6. **Add four GitHub secrets.** In the repo go to **Settings**, then **Secrets and variables**, then **Actions**, and click **New repository secret** for each:
+
+| Secret name | Value |
+| --- | --- |
+| `APPLE_TEAM_ID` | Team ID from step 5 |
+| `ASC_KEY_ID` | Key ID from step 4 |
+| `ASC_ISSUER_ID` | Issuer ID from step 4 |
+| `ASC_KEY_P8` | The whole text of the `.p8` file (open it in TextEdit or Notepad and copy everything, including the BEGIN and END lines) |
+
+### Send a build to TestFlight
+
+1. In the repo click **Actions**, then **iPhone app to TestFlight**, then **Run workflow**, then the green **Run workflow** button.
+2. It takes about 15 to 25 minutes. When it is green, Apple spends another 10 to 30 minutes processing the build.
+3. In App Store Connect open **Jump In**, then **TestFlight**. The first time, answer the export compliance question if asked (the app uses no special encryption).
+4. Under **Internal Testing** click **+**, make a group, and add yourself and up to 100 people on your App Store Connect team. They get an email and install with the **TestFlight** app. Testers outside your team go under **External Testing**, which needs a short Apple review first.
+
+Run the workflow again whenever you want testers to get the latest version. Each run gets a new build number automatically.
+
+### Working on the iPhone app on a Mac (optional)
+
+```
+node build.js
+cd mobile && npm install && npm run sync
+npx cap open ios
+```
+
 ## What it can't do yet
 
 Listening to friends and captioning them live, a lock-screen widget, and the Action button all need a native iOS app.
