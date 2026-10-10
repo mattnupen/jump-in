@@ -84,15 +84,15 @@ A GitHub Actions workflow (`.github/workflows/testflight.yml`) builds it on a cl
 2. **Register the app ID.** At https://developer.apple.com/account/resources/identifiers/list click **+**, choose **App IDs**, then **App**. Description `Jump In`, Bundle ID **Explicit** `com.mattnupen.jumpin`. Leave the capabilities alone and click **Register**.
 3. **Create the app record.** In https://appstoreconnect.apple.com go to **Apps**, click **+**, then **New App**. Platform iOS, name `Jump In` (if taken, try `Jump In AAC`), language English (U.S.), bundle ID `com.mattnupen.jumpin`, SKU `jump-in`, access Full Access.
 4. **Make an API key** so GitHub can sign and upload. In App Store Connect go to **Users and Access**, then **Integrations**, then **App Store Connect API** (request access the first time). Under **Team Keys** click **+**, name it `GitHub TestFlight`, role **Admin** (needed so it can create the signing certificate), and click **Generate**. Write down the **Issuer ID** (top of the page) and the **Key ID**, then click **Download** to get the `AuthKey_XXXX.p8` file. Apple lets you download it only once.
-5. **Find your Team ID.** It is on https://developer.apple.com/account under **Membership details** (10 letters and numbers).
-6. **Add four GitHub secrets.** In the repo go to **Settings**, then **Secrets and variables**, then **Actions**, and click **New repository secret** for each:
+5. **Add three GitHub secrets.** In the repo go to **Settings**, then **Secrets and variables**, then **Actions**, and click **New repository secret** for each:
 
 | Secret name | Value |
 | --- | --- |
-| `APPLE_TEAM_ID` | Team ID from step 5 |
 | `ASC_KEY_ID` | Key ID from step 4 |
 | `ASC_ISSUER_ID` | Issuer ID from step 4 |
 | `ASC_KEY_P8` | The whole text of the `.p8` file (open it in TextEdit or Notepad and copy everything, including the BEGIN and END lines) |
+
+The build reads your Team ID from Apple itself, so no secret is needed for it. Each run makes a one-off signing certificate and profile through the API key and removes them when it finishes; apps already on TestFlight keep working.
 
 ### Send a build to TestFlight
 
