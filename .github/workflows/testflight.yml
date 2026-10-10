@@ -83,7 +83,10 @@ jobs:
           for d in "$HOME/Library/MobileDevice/Provisioning Profiles" "$HOME/Library/Developer/Xcode/UserData/Provisioning Profiles"; do
             mkdir -p "$d"; cp "$SIGN/jumpin.mobileprovision" "$d/$(cat "$SIGN/profile-uuid").mobileprovision"
           done
-          echo "PROFILE_NAME=$(cat "$SIGN/profile-name")" >> "$GITHUB_ENV"
+          # Refer to the profile by its UUID, which Xcode matches more reliably than its name.
+          echo "PROFILE_NAME=$(cat "$SIGN/profile-uuid")" >> "$GITHUB_ENV"
+          security find-identity -v -p codesigning "$KC"
+          ls -la "$HOME/Library/Developer/Xcode/UserData/Provisioning Profiles"
 
       - name: Build and sign the app (archive)
         working-directory: mobile/ios/App
