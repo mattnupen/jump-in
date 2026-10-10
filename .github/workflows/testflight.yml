@@ -1,7 +1,8 @@
 # Builds the Jump In iPhone app on a Mac in the cloud and sends it to TestFlight.
 # Start it from GitHub: Actions tab > "iPhone app to TestFlight" > Run workflow.
-# Needs four repository secrets (see README, "iPhone app"):
-#   APPLE_TEAM_ID, ASC_KEY_ID, ASC_ISSUER_ID, ASC_KEY_P8
+# Needs three repository secrets (see README, "iPhone app"):
+#   ASC_KEY_ID, ASC_ISSUER_ID, ASC_KEY_P8
+# The Apple Team ID is read from the signing profile, so no secret is needed for it.
 name: iPhone app to TestFlight
 
 on:
@@ -16,7 +17,6 @@ jobs:
     runs-on: macos-26
     timeout-minutes: 45
     env:
-      APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
       ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
       ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
     steps:
@@ -35,7 +35,7 @@ jobs:
           ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
         run: |
           missing=""
-          for name in APPLE_TEAM_ID ASC_KEY_ID ASC_ISSUER_ID ASC_KEY_P8; do
+          for name in ASC_KEY_ID ASC_ISSUER_ID ASC_KEY_P8; do
             [ -n "${!name}" ] || missing="$missing $name"
           done
           if [ -n "$missing" ]; then echo "::error::Missing repository secrets:$missing"; exit 1; fi
@@ -85,14 +85,13 @@ jobs:
           done
           # Refer to the profile by its UUID, which Xcode matches more reliably than its name.
           echo "PROFILE_NAME=$(cat "$SIGN/profile-uuid")" >> "$GITHUB_ENV"
-          security find-identity -v -p codesigning "$KC"
-          ls -la "$HOME/Library/Developer/Xcode/UserData/Provisioning Profiles"
+          echo "APPLE_TEAM_ID=$(cat "$SIGN/team-id")" >> "$GITHUB_ENV"
 
       - name: Build and sign the app (archive)
         working-directory: mobile/ios/App
         run: |
           # Sign only the app target by hand, so the Capacitor packages are left alone.
-          sed -i '' "s/CODE_SIGN_STYLE = Automatic;/CODE_SIGN_STYLE = Manual; DEVELOPMENT_TEAM = $APPLE_TEAM_ID; PROVISIONING_PROFILE_SPECIFIER = \"$PROFILE_NAME\"; \"CODE_SIGN_IDENTITY[sdk=iphoneos*]\" = \"Apple Distribution\";/" App.xcodeproj/project.pbxproj
+          sed -i '' "s/CODE_SIGN_STYLE = Automatic;/CODE_SIGN_STYLE = Manual; DEVELOPMENT_TEAM = $APPLE_TEAM_ID; PROVISIONING_PROFILE_SPECIFIER = \"$PROFILE_NAME\"; CODE_SIGN_IDENTITY = \"Apple Distribution\"; \"CODE_SIGN_IDENTITY[sdk=iphoneos*]\" = \"Apple Distribution\";/" App.xcodeproj/project.pbxproj
           xcodebuild archive \
             -project App.xcodeproj \
             -scheme App \

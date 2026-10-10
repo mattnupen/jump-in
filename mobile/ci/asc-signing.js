@@ -1,6 +1,6 @@
 // Makes a short-lived App Store signing certificate and profile through the
 // App Store Connect API for one CI build, then removes them afterwards.
-//   node asc-signing.js setup <work dir>    creates dist.cer + jumpin.mobileprovision
+//   node asc-signing.js setup <work dir>    creates dist.cer, jumpin.mobileprovision and team-id
 //   node asc-signing.js cleanup <work dir>  revokes the certificate, deletes the profile
 // Needs ASC_KEY_ID, ASC_ISSUER_ID, ASC_KEY_PATH and BUNDLE_ID; setup also needs dist.csr in <work dir>.
 const crypto = require('crypto');
@@ -61,7 +61,12 @@ async function setup() {
   fs.writeFileSync(path.join(dir, 'profile-id'), profile.data.id);
   fs.writeFileSync(path.join(dir, 'profile-name'), name);
   fs.writeFileSync(path.join(dir, 'profile-uuid'), profile.data.attributes.uuid);
-  fs.writeFileSync(path.join(dir, 'jumpin.mobileprovision'), Buffer.from(profile.data.attributes.profileContent, 'base64'));
+  const content = Buffer.from(profile.data.attributes.profileContent, 'base64');
+  fs.writeFileSync(path.join(dir, 'jumpin.mobileprovision'), content);
+  // The profile names the team it belongs to, so the build never depends on a typed-in Team ID.
+  const team = content.toString('latin1').match(/<key>TeamIdentifier<\/key>\s*<array>\s*<string>(\w+)<\/string>/);
+  if (!team) throw new Error('Could not read the Team ID from the new profile');
+  fs.writeFileSync(path.join(dir, 'team-id'), team[1]);
   console.log(`Created certificate ${cert.data.id} and profile "${name}"`);
 }
 
