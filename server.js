@@ -14,7 +14,8 @@ const PUBLIC = path.join(__dirname, 'public');
 
 const TYPES = {
   '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8',
-  '.png': 'image/png', '.svg': 'image/svg+xml', '.json': 'application/json', '.webmanifest': 'application/manifest+json'
+  '.png': 'image/png', '.svg': 'image/svg+xml', '.json': 'application/json', '.webmanifest': 'application/manifest+json',
+  '.mjs': 'text/javascript; charset=utf-8', '.wasm': 'application/wasm', '.tflite': 'application/octet-stream'
 };
 
 // Simple per-visitor cap so a public link can't run up the API bill.
@@ -90,7 +91,7 @@ function serveStatic(req, res) {
   fs.readFile(file, (err, buf) => {
     if (err) return send(res, 404, 'Not found', 'text/plain');
     const ext = path.extname(file);
-    const cache = ext === '.png' ? 'public, max-age=604800' : 'no-cache';
+    const cache = ['.png', '.wasm', '.tflite'].includes(ext) || rel.startsWith('/vendor/') ? 'public, max-age=604800' : 'no-cache';
     res.writeHead(200, { 'Content-Type': TYPES[ext] || 'application/octet-stream', 'Cache-Control': cache });
     res.end(buf);
   });

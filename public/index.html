@@ -17,56 +17,65 @@
 <title>Jump In</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=DM+Sans:wght@400;500;700&display=swap">
 <style>
-/* Layout: one phone-width column; status bar, scrolling view, fixed tab bar. Deliberately dark-only. */
-/* Light is the default theme; Setup > Look switches to dark. Every pair below keeps text at 4.5:1 or better. */
+/* Layout: one phone-width column; status bar, scrolling view, fixed tab bar. */
+/* Light is the default theme; Setup > Look switches to dark. Every text pair below is 4.5:1 or better. */
 :root {
-  --bg: #F4F6F3;
-  --surface: #FFFFFF;
-  --surface-2: #EDF1EE;
-  --line: #C9D1CE;
-  --line-strong: #7A8A90;
-  --fg: #14201F;
-  --fg-2: #2B3A40;
-  --muted: #48565B;
-  --placeholder: #56656B;
-  --accent: #0B7A67;
+  --bg: #FFFFFF;
+  --surface: #F3F3F6;
+  --surface-2: #E8E8EE;
+  --line: #D9D9E1;
+  --line-strong: #6E6E7A;
+  --fg: #111114;
+  --fg-2: #2E2E36;
+  --muted: #55555F;
+  --placeholder: #5F5F6A;
+  --accent: #5B2EE8;
   --accent-ink: #FFFFFF;
-  --accent-soft: #DDF3EC;
-  --glow: rgba(11, 122, 103, 0.28);
+  --accent-soft: #EEE8FF;
+  --pop: #FFE600;
+  --pop-ink: #111114;
+  --glow: rgba(91, 46, 232, 0.30);
   --warn: #A86A00;
   --hold-bg: #FFF1CC;
   --danger: #B42318;
   --danger-line: #E7A39C;
-  --tabbar: #FFFFFF;
-  --knob: #9AA7AC;
+  --tabbar: rgba(255, 255, 255, 0.94);
+  --knob: #9A9AA6;
   --knob-dot: #FFFFFF;
-  --overlay: rgba(20, 32, 31, 0.45);
+  --overlay: rgba(17, 17, 20, 0.45);
+  --shadow: 0 2px 10px rgba(17, 17, 20, 0.08);
+  --tint-hi: #FFF4B8; --tint-react: #FFE0EC; --tint-news: #FFE6CF; --tint-ask: #DDEBFF; --tint-more: #ECE4FF; --tint-bye: #DDF6E6;
+  --ring: conic-gradient(#FFE600, #FF5FA2, #7B5CFF, #2EC5FF, #FFE600);
   --font-display: 'Bricolage Grotesque', 'Avenir Next', 'Segoe UI', sans-serif;
   --font-body: 'DM Sans', -apple-system, 'Segoe UI', sans-serif;
   color-scheme: light;
 }
 :root[data-theme="dark"] {
-  --bg: #0E1214;
-  --surface: #1A2226;
-  --surface-2: #263036;
-  --line: #34424A;
-  --line-strong: #74858E;
-  --fg: #F4F4F0;
-  --fg-2: #D3DCDF;
-  --muted: #B8C2C8;
-  --placeholder: #9BA8AF;
-  --accent: #5EE0C8;
-  --accent-ink: #0E1214;
-  --accent-soft: #173A35;
-  --glow: var(--glow);
+  --bg: #0B0B0F;
+  --surface: #1A1A22;
+  --surface-2: #26262F;
+  --line: #34343F;
+  --line-strong: #7C7C8A;
+  --fg: #F6F6F8;
+  --fg-2: #D9D9E0;
+  --muted: #B3B3BE;
+  --placeholder: #9C9CA8;
+  --accent: #B9A2FF;
+  --accent-ink: #0B0B0F;
+  --accent-soft: #2A2245;
+  --pop: #FFE600;
+  --pop-ink: #111114;
+  --glow: rgba(185, 162, 255, 0.40);
   --warn: #F7C948;
   --hold-bg: #3A3216;
   --danger: #FF8A7A;
   --danger-line: #5A3A36;
-  --tabbar: #12181B;
-  --knob: #4A5961;
-  --knob-dot: #F4F4F0;
-  --overlay: rgba(5, 8, 9, 0.7);
+  --tabbar: rgba(11, 11, 15, 0.94);
+  --knob: #4A4A57;
+  --knob-dot: #F6F6F8;
+  --overlay: rgba(0, 0, 0, 0.7);
+  --shadow: none;
+  --tint-hi: #3A3410; --tint-react: #3D1F2C; --tint-news: #3D2A18; --tint-ask: #1A2A42; --tint-more: #2A2245; --tint-bye: #173523;
   color-scheme: dark;
 }
 html { font-size: 100%; -webkit-text-size-adjust: 100%; }
@@ -252,6 +261,57 @@ html.big-text .move { padding-top: 22px; }
 .picker .tile { font-size: 0.8125rem; overflow-wrap: break-word; hyphens: manual; padding-left: 4px; padding-right: 4px; }
 html.big-text .reactions, html.big-text .yesno { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 html.big-text .ptiles { grid-template-columns: 1fr; }
+
+/* ---------- Pop look: soft filled cards, pill controls, bright highlights ---------- */
+body { font-size: 1.0625rem; }
+.top { background: var(--bg); }
+.brand b { font-size: 1.5rem; letter-spacing: -0.5px; }
+.said { border-radius: 24px; background: var(--surface); }
+.roundbtn { border-radius: 20px; background: var(--bg); box-shadow: var(--shadow); }
+.chip, .tog { box-shadow: none; background: var(--surface); border: 2px solid transparent; border-radius: 999px; }
+.chip.on, .tog.on { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+.chip.on .avatar, .tog.on .avatar { box-shadow: 0 0 0 2px var(--bg); }
+.move { box-shadow: none; border-radius: 28px; border: 3px solid transparent; }
+.move.mv-hi { background: var(--tint-hi); } .move.mv-react { background: var(--tint-react); } .move.mv-news { background: var(--tint-news); }
+.move.mv-ask { background: var(--tint-ask); } .move.mv-more { background: var(--tint-more); } .move.mv-bye { background: var(--tint-bye); }
+.move.next { border-color: var(--fg); background-clip: padding-box; }
+.move .name { font-size: 1.375rem; letter-spacing: -0.3px; }
+.badge { background: var(--pop); color: var(--pop-ink); border-radius: 999px; padding: 3px 9px 3px 5px; box-shadow: 0 0 0 2px var(--fg); }
+.morebtn { background: var(--bg); border: none; box-shadow: var(--shadow); color: var(--fg-2); border-radius: 999px; }
+:root[data-theme="dark"] .morebtn { box-shadow: inset 0 0 0 1.5px var(--line); }
+.ptile, .tile, .card { box-shadow: none; background: var(--surface); border-radius: 22px; }
+.join { background: var(--bg); border-radius: 20px; }
+.alts { border-radius: 26px; }
+.big { border-radius: 999px; border: none; background: var(--surface); }
+.big.warn { background: var(--hold-bg); box-shadow: inset 0 0 0 2px var(--warn); }
+.big.primary { background: var(--pop); color: var(--pop-ink); box-shadow: inset 0 0 0 2px var(--fg); }
+.small { border-radius: 999px; border: 2px solid var(--line); }
+.section { border-radius: 28px; }
+.input { border-radius: 16px; }
+.seg button, .switch { border-radius: 20px; }
+.seg button.on { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+.switch.on .knob { background: var(--accent); }
+.tabs { border-top: none; box-shadow: 0 -4px 20px rgba(17, 17, 20, 0.08); backdrop-filter: saturate(1.6) blur(14px); -webkit-backdrop-filter: saturate(1.6) blur(14px); }
+.tab { border-radius: 999px; }
+.tab.on { background: var(--fg); color: var(--bg); border-color: var(--fg) !important; }
+.sheet { border-radius: 30px 30px 0 0; }
+.partner .turnbar { background: var(--accent); border-radius: 26px; }
+.partner > * { flex-shrink: 0; }
+.turnbar .avatar.plain { background: #FFFFFF !important; }
+.partner .replies .tile.on { box-shadow: inset 0 0 0 3px var(--fg); background: var(--pop); color: var(--pop-ink); }
+.card.on { border-color: var(--fg); background: var(--accent-soft); }
+.move:focus-visible, .tile:focus-visible, .chip:focus-visible { outline-color: var(--accent); }
+/* Faces: a photo cropped to a circle with a colourful story ring. */
+.avatar { position: relative; overflow: visible; }
+.avatar.face { padding: 2px; background: var(--ring) !important; }
+.avatar.face img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block; border: 2px solid var(--bg); filter: none; opacity: 1; }
+.avatar.lg { width: 48px; height: 48px; border-radius: 24px; }
+.avatar.xl { width: 96px; height: 96px; border-radius: 48px; }
+.avatar.xl .ic { width: 64px; height: 64px; }
+.avatar.lg .ic { width: 36px; height: 36px; }
+.cropper { position: relative; width: min(78vw, 300px); aspect-ratio: 1; margin: 0 auto; border-radius: 50%; overflow: hidden; touch-action: none; background: var(--surface-2); box-shadow: 0 0 0 4px var(--fg); }
+.cropper img { position: absolute; left: 0; top: 0; transform-origin: 0 0; user-select: none; -webkit-user-drag: none; pointer-events: none; max-width: none; }
+.facecard { display: flex; align-items: center; gap: 12px; }
 @keyframes spin { to { transform: rotate(360deg); } }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
 </style>
@@ -314,7 +374,7 @@ const PARTNER_REPLIES = () => [
   P('Cool!', ['smile']), P('Me too!', ['same']), P('LOL', ['lol']),
   P('Yes', ['yes']), P('No', ['no']), P('Awesome!', ['excited']),
   P('Tell me more', ['tellmore']), P('What happened?', ['question']), P('Want to play?', ['gaming'])
-];
+].map(r => { r.words[0].label = r.text.replace(/[!?]+$/, '').toLowerCase(); return r; });
 
 const MOVES = [
   { id: 'hi', name: 'Hi', icon: 'wave' },
@@ -746,7 +806,9 @@ function renderSaidInto() {
     el.innerHTML = `<div class="said"><div class="words"><span class="empty">${ic('speaker', 'm')}Tap a picture to talk</span></div></div>`;
     return;
   }
+  const byF = p.by ? S.profile.friends.find(f => f.name === p.by) : null;
   el.innerHTML = `<div class="said ${S.holding ? 'hold' : ''}">
+    ${p.by ? friendAvatar(byF, 'lg') : ''}
     <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px">
       <div class="words">${wordStrip(p.words)}</div>
       <div class="text">${S.holding ? 'Friends heard: ' : ''}${p.by ? esc(p.by) + ' said: ' : ''}"${esc(p.text)}"</div>
@@ -760,7 +822,15 @@ function renderTabs() {
   document.getElementById('tabs').innerHTML = tabs.map(([id, name, icon]) =>
     `<button class="tab ${S.view === id ? 'on' : ''}" data-act="tab" data-id="${id}" aria-current="${S.view === id ? 'page' : 'false'}">${ic(icon)}${name}</button>`).join('');
 }
-function friendAvatar(f) { return `<span class="avatar" style="background:${esc(f.color)}">${ic('jordan')}</span>`; }
+function friendAvatar(f, size) {
+  if (f && f.photo) return `<span class="avatar face ${size || ''}"><img src="${esc(f.photo)}" alt=""></span>`;
+  return `<span class="avatar ${size || ''}" style="background:${esc((f && f.color) || '#C9B8FF')}">${ic('jordan')}</span>`;
+}
+function meAvatar(size) {
+  const p = S.profile;
+  if (p.photo) return `<span class="avatar face ${size || ''}"><img src="${esc(p.photo)}" alt=""></span>`;
+  return `<span class="avatar ${size || ''}" style="background:#FFD6E4">${ic('me')}</span>`;
+}
 
 function viewTalk() {
   const next = ORDER[S.step];
@@ -769,7 +839,7 @@ function viewTalk() {
     S.profile.friends.map(f => `<button class="chip ${S.withId === f.id ? 'on' : ''}" data-act="with" data-id="${esc(f.id)}">${friendAvatar(f)}${esc(f.name || 'Friend')}</button>`).join('');
   const moves = MOVES.map(m => {
     const ps = phrasesFor(m.id);
-    return `<div class="movewrap"><button class="move ${m.id === next ? 'next' : ''}" data-act="move" data-id="${m.id}">
+    return `<div class="movewrap"><button class="move mv-${m.id} ${m.id === next ? 'next' : ''}" data-act="move" data-id="${m.id}">
       <span class="head">${ic(m.icon, 'l')}<span class="name">${m.name}</span>${m.id === next ? `<span class="badge">${ic('next', 'xs')}NEXT</span>` : ''}</span>
       <span class="phrase">${esc(ps[0] ? ps[0].text : '')}</span>
     </button><button class="morebtn" data-act="page" data-id="${m.id}" data-say="${m.name}, more choices">${ic('plus', 's')}more</button></div>`;
@@ -839,7 +909,10 @@ function viewNews() {
     <button class="big primary wide" data-act="newsAdd">${ic('camera')}Add news from a photo</button>
     <button class="label hd" data-act="sayLabel">${ic('tellmore', 's')}Keep it going${ic('speaker', 'xs')}</button>
     <div class="ptiles">${NEWS_FOLLOW.map((p, i) => `<button class="ptile" data-act="newsFollow" data-i="${i}">${phraseIcon(p)}<span>${esc(p.text)}</span></button>`).join('')}</div>
-    <button class="big wide" data-act="askBack">${ic('question')}Ask back: What did you do?</button>`;
+    <div class="quick">
+      <button class="big" data-act="askBack" data-say="Ask back: What did you do?">${ic('question')}Ask back</button>
+      <button class="big" data-act="show">${ic('showfriends')}Your turn</button>
+    </div>`;
 }
 
 const TEXT_SIZES = [{ v: 1, name: 'Normal' }, { v: 1.15, name: 'Large' }, { v: 1.3, name: 'Larger' }, { v: 1.5, name: 'Largest' }];
@@ -853,8 +926,12 @@ function viewSetup() {
     `<option value="${esc(v.voiceURI)}" ${v.voiceURI === p.voiceURI ? 'selected' : ''}>${esc(v.name)} (${esc(v.lang)})</option>`)).join('');
   const friends = p.friends.map(f => `<div class="sub">
       <div class="fieldrow">
-        <button class="iconbtn" style="background:${esc(f.color)};border:none;color:#0E1214" data-act="friendColor" data-id="${esc(f.id)}" data-say="Change color">${ic('jordan')}color</button>
+        ${friendAvatar(f, 'xl')}
         <input class="input" data-bind="friend.name" data-id="${esc(f.id)}" value="${esc(f.name)}" aria-label="Friend's name" placeholder="Name">
+      </div>
+      <div class="flexrow" style="flex-wrap:wrap">
+        <button class="small accent" data-act="facePick" data-who="${esc(f.id)}" data-say="${f.photo ? 'Change' : 'Add'} ${esc(f.name || 'friend')}'s photo">${ic('camera', 's')}${f.photo ? 'Change photo' : 'Add photo'}</button>
+        ${f.photo ? `<button class="small danger" data-act="faceRemove" data-who="${esc(f.id)}" data-say="Remove ${esc(f.name || 'friend')}'s photo">${ic('no', 's')}Remove photo</button>` : `<button class="small" data-act="friendColor" data-id="${esc(f.id)}" data-say="Change color">${ic('picture', 's')}Color</button>`}
       </div>
       <button class="label hd" data-act="sayLabel">${ic('want', 's')}${esc(f.name || 'They')} likes${ic('speaker', 'xs')}</button>
       <div class="toggles">${Object.keys(INTERESTS).map(k => { const on = f.interests.includes(k); return `<button class="tog ${on ? 'on' : ''}" data-act="interest" data-id="${esc(f.id)}" data-k="${k}" aria-pressed="${on}">${ic(k, 'm')}${esc(LABELS[k])}</button>`; }).join('')}</div>
@@ -895,6 +972,14 @@ function viewSetup() {
   return `
     <div class="section">
       <h2><button class="hd h2btn" data-act="sayLabel">${ic('me', 'm')}About me${ic('speaker', 'xs')}</button></h2>
+      <div class="facecard">
+        ${meAvatar('xl')}
+        <div class="flexrow" style="flex-wrap:wrap">
+          <button class="small accent" data-act="facePick" data-who="me" data-say="${p.photo ? 'Change my photo' : 'Add my photo'}">${ic('camera', 's')}${p.photo ? 'Change photo' : 'Add photo'}</button>
+          ${p.photo ? `<button class="small danger" data-act="faceRemove" data-who="me" data-say="Remove my photo">${ic('no', 's')}Remove photo</button>` : ''}
+        </div>
+      </div>
+      <input type="file" id="faceIn" class="vh" accept="image/*" tabindex="-1" aria-hidden="true">
       <div class="field"><label class="label" for="f-name">${ic('me', 's')}My name</label><input class="input" id="f-name" data-bind="name" value="${esc(p.name)}" autocomplete="off"></div>
     </div>
     <div class="section">
@@ -962,6 +1047,8 @@ function render() {
   renderSaid();
   const ri = document.getElementById('restoreIn');
   if (ri) ri.addEventListener('change', onRestore);
+  const fi = document.getElementById('faceIn');
+  if (fi) fi.addEventListener('change', onFacePhoto);
 }
 function backupData() {
   return JSON.stringify({ app: 'jump-in', version: 2, savedAt: new Date().toISOString(), profile: S.profile, news: S.news });
@@ -991,12 +1078,31 @@ function renderLayer() {
     const chips = [...S.profile.friends.map(f => `<button class="chip ${S.partnerId === f.id ? 'on' : ''}" data-act="partnerWho" data-id="${esc(f.id)}" aria-pressed="${S.partnerId === f.id}">${friendAvatar(f)}${esc(f.name)}</button>`),
       `<button class="chip ${!pf ? 'on' : ''}" data-act="partnerWho" data-id="" aria-pressed="${!pf}" data-say="Someone">${ic('friend')}Someone</button>`].join('');
     el.innerHTML = `<div class="partner" role="dialog" aria-modal="true" aria-label="${esc(turn)}">
-      <h2 class="turnbar"><button class="hd h2btn" data-act="sayLabel">${pf ? friendAvatar(pf) : ic('friend', 'm')}${esc(turn)}${ic('speaker', 'xs')}</button></h2>
+      <h2 class="turnbar"><button class="hd h2btn" data-act="sayLabel">${pf ? friendAvatar(pf, 'lg') : `<span class="avatar lg plain">${ic('friend')}</span>`}${esc(turn)}${ic('speaker', 'xs')}</button></h2>
       <div class="chips" role="group" aria-label="Who is talking">${chips}</div>
-      ${rp ? `<button class="said-by" data-act="partnerReplay" data-say="${esc(me)} said ${esc(rp.text)}">${phraseIcon(rp)}<span class="who">${esc(me)} said</span><span class="what">${esc(rp.text)}</span></button>` : ''}
+      ${rp ? `<button class="said-by" data-act="partnerReplay" data-say="${esc(me)} said ${esc(rp.text)}">${meAvatar('lg')}${phraseIcon(rp)}<span class="who">${esc(me)} said</span><span class="what">${esc(rp.text)}</span></button>` : ''}
       <div class="replies">${PARTNER_REPLIES().map((r, i) => `<button class="tile ${S.partnerLast === i ? 'on' : ''}" data-act="partnerSay" data-i="${i}">${ic(r.words[0].icon, 'l')}${esc(r.text)}</button>`).join('')}</div>
-      <button class="big primary wide back" data-act="partnerDone">${ic('myturn', 'l')}Back to ${esc(me)}</button>
+      <button class="big primary wide back" data-act="partnerDone">${meAvatar('lg')}Back to ${esc(me)}</button>
     </div>`;
+    return;
+  }
+  if (S.layer === 'crop' && S.crop) {
+    const c = S.crop;
+    const who = c.who === 'me' ? 'My photo' : `${(S.profile.friends.find(f => f.id === c.who) || {}).name || 'Friend'}'s photo`;
+    el.innerHTML = `<div class="overlay"><div class="sheet" role="dialog" aria-modal="true" aria-label="${esc(who)}">
+      <div class="sheet-head"><h2><button class="hd h2btn" data-act="sayLabel">${ic('camera', 'm')}${esc(who)}${ic('speaker', 'xs')}</button></h2></div>
+      <div class="cropper" id="cropBox"><img src="${esc(c.url)}" alt=""></div>
+      <button class="label hd" data-act="sayLabel" style="justify-content:center">${c.busy ? '<span class="spinner"></span>Looking for a face' : c.found ? ic('yes', 's') + 'Found a face. Drag or pinch to fix it.' : ic('watch', 's') + 'Drag and pinch so the face fills the circle.'}${ic('speaker', 'xs')}</button>
+      <div class="quick">
+        <button class="big" data-act="cropZoom" data-v="0.85" data-say="Closer">${ic('plus', 'm')}Closer</button>
+        <button class="big" data-act="cropZoom" data-v="1.18" data-say="Farther">${ic('picture', 'm')}Farther</button>
+      </div>
+      <div class="quick">
+        <button class="big" data-act="cropCancel">${ic('no', 'm')}Cancel</button>
+        <button class="big primary" data-act="cropSave">${ic('savecheck', 'm')}Use photo</button>
+      </div>
+    </div></div>`;
+    wireCropper();
     return;
   }
   if (S.layer === 'card') {
@@ -1074,6 +1180,91 @@ function renderLayer() {
     input.addEventListener('change', onPhoto);
     return;
   }
+}
+/* ---------- faces: everything happens on this phone; the photo is never uploaded ---------- */
+let faceDetector = null;
+async function findFace(img) {
+  try {
+    if ('FaceDetector' in window) {
+      const r = await new window.FaceDetector({ fastMode: true, maxDetectedFaces: 1 }).detect(img);
+      if (r && r[0]) { const b = r[0].boundingBox; return { x: b.x, y: b.y, w: b.width, h: b.height }; }
+    }
+  } catch (e) {}
+  try {
+    if (!faceDetector) {
+      const mp = await import('/vendor/mediapipe/vision_bundle.mjs');
+      const files = await mp.FilesetResolver.forVisionTasks('/vendor/mediapipe/wasm');
+      faceDetector = await mp.FaceDetector.createFromOptions(files, { baseOptions: { modelAssetPath: '/vendor/blaze_face_short_range.tflite' }, runningMode: 'IMAGE' });
+    }
+    const d = faceDetector.detect(img).detections[0];
+    if (d) { const b = d.boundingBox; return { x: b.originX, y: b.originY, w: b.width, h: b.height }; }
+  } catch (e) {}
+  return null;
+}
+function withTimeout(pr, ms) { return Promise.race([pr, new Promise(r => setTimeout(() => r(null), ms))]); }
+function loadImage(url) { return new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = url; }); }
+async function onFacePhoto(ev) {
+  const file = ev.target.files && ev.target.files[0];
+  ev.target.value = '';
+  if (!file || !S.faceWho) return;
+  try {
+    const { url } = await fileToDataURL(file, 1200);
+    const img = await loadImage(url);
+    S.crop = { who: S.faceWho, url, w: img.width, h: img.height, busy: true, found: null };
+    const short = Math.min(img.width, img.height);
+    Object.assign(S.crop, { size: short, cx: img.width / 2, cy: img.height / 2 });
+    S.layer = 'crop'; renderLayer();
+    const face = await withTimeout(findFace(img), 8000);
+    if (!S.crop) return;
+    S.crop.busy = false; S.crop.found = !!face;
+    if (face) {
+      const size = Math.min(short, Math.max(face.w, face.h) * 2.1);
+      Object.assign(S.crop, { size, cx: face.x + face.w / 2, cy: face.y + face.h * 0.45 });
+    }
+    clampCrop(); renderLayer();
+    speakButton(face ? 'Found a face' : 'Move the photo so the face is in the circle');
+  } catch (e) { S.crop = null; S.layer = null; renderLayer(); speakButton('That photo did not work'); }
+}
+function clampCrop() {
+  const c = S.crop; if (!c) return;
+  c.size = Math.max(40, Math.min(c.size, Math.min(c.w, c.h)));
+  c.cx = Math.max(c.size / 2, Math.min(c.w - c.size / 2, c.cx));
+  c.cy = Math.max(c.size / 2, Math.min(c.h - c.size / 2, c.cy));
+}
+function placeCropImage() {
+  const c = S.crop, box = document.getElementById('cropBox'); if (!c || !box) return;
+  const img = box.querySelector('img'), k = box.clientWidth / c.size;
+  img.style.width = (c.w * k) + 'px'; img.style.height = (c.h * k) + 'px';
+  img.style.transform = `translate(${(-(c.cx - c.size / 2)) * k}px, ${(-(c.cy - c.size / 2)) * k}px)`;
+}
+function wireCropper() {
+  const box = document.getElementById('cropBox'); if (!box) return;
+  placeCropImage();
+  const pts = new Map(); let last = null;
+  const state = () => { const a = [...pts.values()]; if (a.length === 1) return { x: a[0].x, y: a[0].y, d: 0 }; const [p, q] = a; return { x: (p.x + q.x) / 2, y: (p.y + q.y) / 2, d: Math.hypot(p.x - q.x, p.y - q.y) }; };
+  box.addEventListener('pointerdown', e => { box.setPointerCapture(e.pointerId); pts.set(e.pointerId, { x: e.clientX, y: e.clientY }); last = state(); });
+  box.addEventListener('pointermove', e => {
+    if (!pts.has(e.pointerId) || !S.crop) return;
+    pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    const now = state(), c = S.crop, k = box.clientWidth / c.size;
+    if (last) {
+      c.cx -= (now.x - last.x) / k; c.cy -= (now.y - last.y) / k;
+      if (now.d && last.d) c.size *= last.d / now.d;
+    }
+    last = now; clampCrop(); placeCropImage();
+  });
+  const up = e => { pts.delete(e.pointerId); last = pts.size ? state() : null; };
+  box.addEventListener('pointerup', up); box.addEventListener('pointercancel', up);
+}
+async function saveCrop() {
+  const c = S.crop; if (!c) return;
+  const img = await loadImage(c.url);
+  const cv = document.createElement('canvas'); cv.width = cv.height = 256;
+  cv.getContext('2d').drawImage(img, c.cx - c.size / 2, c.cy - c.size / 2, c.size, c.size, 0, 0, 256, 256);
+  const out = cv.toDataURL('image/jpeg', 0.82);
+  if (c.who === 'me') S.profile.photo = out;
+  else { const f = S.profile.friends.find(x => x.id === c.who); if (f) f.photo = out; }
+  S.crop = null; S.layer = null; scheduleSave(); renderLayer(); render();
 }
 function openPicker(cb) { S.pickerCb = cb; S.layer = 'picker'; renderLayer(); }
 
@@ -1153,6 +1344,11 @@ const actions = {
   },
   hold() { say(HOLD, { hold: true }); },
   show() { S.partnerId = S.withId; S.partnerFrom = S.last && !S.last.by ? S.last : null; S.partnerLast = null; S.layer = 'show'; renderLayer(); },
+  facePick(t) { S.faceWho = t.dataset.who; const fi = document.getElementById('faceIn'); if (fi) fi.click(); },
+  faceRemove(t) { const w = t.dataset.who; if (w === 'me') delete S.profile.photo; else { const f = S.profile.friends.find(x => x.id === w); if (f) delete f.photo; } scheduleSave(); render(); },
+  cropZoom(t) { if (!S.crop) return; S.crop.size *= Number(t.dataset.v); clampCrop(); placeCropImage(); },
+  cropCancel() { S.crop = null; S.layer = null; renderLayer(); },
+  cropSave() { saveCrop(); },
   partnerWho(t) { S.partnerId = t.dataset.id || null; renderLayer(); },
   partnerReplay() { if (S.partnerFrom) speak(S.partnerFrom.text); return ''; },
   partnerSay(t) {
