@@ -278,6 +278,7 @@ button:disabled { opacity: 0.45; cursor: default; }
 :root[data-theme="dark"] .big.primary .ic.ink, :root[data-theme="dark"] .badge .ic.ink, :root[data-theme="dark"] .partner .replies .tile.on .ic.ink { filter: brightness(0); }
 .chip.on .avatar, .tog.on .avatar { box-shadow: 0 0 0 2px var(--bg); }
 .move { box-shadow: none; border-radius: 28px; border: 3px solid transparent; }
+.big.joke { background: var(--tint-react); }
 .move.mv-hi { background: var(--tint-hi); } .move.mv-react { background: var(--tint-react); } .move.mv-news { background: var(--tint-news); }
 .move.mv-ask { background: var(--tint-ask); } .move.mv-more { background: var(--tint-more); } .move.mv-bye { background: var(--tint-bye); }
 .move.next { border-color: var(--fg); background-clip: padding-box; }
@@ -404,9 +405,19 @@ const REPLY_RULES = [
   { test: /\?\s*$/, replies: () => [R('Yes', 'yes'), R('No', 'no'), R('Maybe', 'confused'), R("I don't know", 'question'), R('What about you?', 'you'), R('Good question!', 'idea')] },
   { test: /\b(i have news|guess what|i went|i saw|i got|i made|i did|i won|we won|my weekend|i had)\b/i, replies: () => [R('Cool!', 'smile'), R('No way!', 'shocked'), R('Tell me more', 'tellmore'), R('What happened?', 'question'), R('Was it fun?', 'excited'), R('Who was there?', 'friend')] }
 ];
+const JOKES = [
+  'Why did the scarecrow win an award? He was outstanding in his field!',
+  'What do you call a sleeping dinosaur? A dino-snore!',
+  "Why can't a bike stand up on its own? It's two tired!",
+  'What do you call a fish with no eyes? A fsh!',
+  'Why did the math book look sad? It had too many problems.',
+  'What do you call cheese that is not yours? Nacho cheese!',
+  'Why did the cookie go to the doctor? It felt crummy.',
+  'What do you call a bear with no teeth? A gummy bear!'
+];
 function partnerReplies(from) {
   const t = from && from.text ? from.text : '';
-  const rule = t && REPLY_RULES.find(r => r.test.test(t));
+  const rule = from && from.joke ? REPLY_RULES.find(r => r.test.test('joke')) : t && REPLY_RULES.find(r => r.test.test(t));
   if (!rule) return PARTNER_REPLIES();
   // Topic replies first, then three general ones so there is always a fallback.
   const extra = PARTNER_REPLIES().filter(g => ['Cool!', 'Yes', 'No'].includes(g.text) && !rule.replies().some(r => r.text === g.text));
@@ -913,6 +924,7 @@ function viewTalk() {
     <div class="row" role="group" aria-label="Who are you talking with">${withChips}</div>
     <div class="moves">${moves}</div>
     ${alts}
+    ${(S.profile.likes || []).includes('jokes') ? `<button class="big wide joke" data-act="tellJoke" data-say="Tell a joke">${ic('lol')}Tell a joke</button>` : ''}
     <div class="yesno">
       <button class="tile" data-act="quickSay" data-k="yes">${ic('yes', 'm')}Yes</button>
       <button class="tile" data-act="quickSay" data-k="no">${ic('no', 'm')}No</button>
@@ -990,7 +1002,7 @@ function viewSetup() {
         <button class="small accent" data-act="facePick" data-who="${esc(f.id)}" data-say="${f.photo ? 'Change' : 'Add'} ${esc(f.name || 'friend')}'s photo">${ic('camera', 's')}${f.photo ? 'Change photo' : 'Add photo'}</button>
         ${f.photo ? `<button class="small danger" data-act="faceRemove" data-who="${esc(f.id)}" data-say="Remove ${esc(f.name || 'friend')}'s photo">${ic('no', 's')}Remove photo</button>` : `<button class="small" data-act="friendColor" data-id="${esc(f.id)}" data-say="Change color">${ic('picture', 's')}Color</button>`}
       </div>
-      <button class="label hd" data-act="sayLabel">${ic('want', 's')}${esc(f.name || 'They')} likes (up to 5)${ic('speaker', 'xs')}</button>
+      <button class="label hd" data-act="sayLabel">${ic('want', 's')}${esc(f.name || 'They')} likes${ic('speaker', 'xs')}</button>
       <div class="toggles">${Object.keys(INTERESTS).map(k => { const on = f.interests.includes(k); return `<button class="tog ${on ? 'on' : ''}" data-act="interest" data-id="${esc(f.id)}" data-k="${k}" aria-pressed="${on}">${ic(k, 'm')}${esc(LABELS[k])}</button>`; }).join('')}</div>
       <button class="small danger" data-act="friendDelete" data-id="${esc(f.id)}" data-say="Remove ${esc(f.name || 'friend')}">${ic('no', 's')}Remove ${esc(f.name || 'friend')}</button>
     </div>`).join('');
@@ -1038,7 +1050,7 @@ function viewSetup() {
         </div>
       </div>
       <input type="file" id="faceIn" class="vh" accept="image/*" tabindex="-1" aria-hidden="true">
-      <button class="label hd" data-act="sayLabel">${ic('want', 's')}I like (up to 5)${ic('speaker', 'xs')}</button>
+      <button class="label hd" data-act="sayLabel">${ic('want', 's')}I like${ic('speaker', 'xs')}</button>
       <div class="toggles">${Object.keys(INTERESTS).map(k => { const on = (p.likes || []).includes(k); return `<button class="tog ${on ? 'on' : ''}" data-act="interest" data-id="me" data-k="${k}" aria-pressed="${on}">${ic(k, 'm')}${esc(LABELS[k])}</button>`; }).join('')}</div>
     </div>
     <div class="section">
@@ -1406,6 +1418,10 @@ const actions = {
     S.draft = { text: '', icon: 'plus' }; scheduleSave(); renderLayer();
   },
   customDelete(t) { const list = S.profile.custom && S.profile.custom[S.pageMove]; if (!list) return; list.splice(Number(t.dataset.i), 1); scheduleSave(); renderLayer(); },
+  tellJoke() {
+    const j = JOKES[(S.jokeAt = ((S.jokeAt ?? -1) + 1) % JOKES.length)];
+    say(Object.assign(P(j, ['lol']), { joke: true }));
+  },
   quickSay(t) {
     const q = { yes: P('Yes!', ['yes']), no: P('No.', ['no']), maybe: P('Maybe.', ['confused']), again: P('Can you say that again?', ['again', 'qmark']) }[t.dataset.k];
     if (q) say(q);
@@ -1514,9 +1530,8 @@ const actions = {
     const f = isMe ? null : S.profile.friends.find(x => x.id === t.dataset.id); if (!isMe && !f) return; const k = t.dataset.k;
     const list = isMe ? S.profile.likes : f.interests;
     const on = !list.includes(k);
-    // Up to 5 likes; adding a 6th turns off the oldest, and says so.
-    const dropped = on && list.length >= 5 ? list[0] : null;
-    const next = on ? list.concat(k).slice(-5) : list.filter(x => x !== k);
+    const dropped = null;
+    const next = on ? list.concat(k) : list.filter(x => x !== k);
     if (isMe) S.profile.likes = next; else f.interests = next;
     scheduleSave(); render();
     return `${LABELS[k]}, ${on ? 'on' : 'off'}${dropped ? `. ${LABELS[dropped]}, off` : ''}`;
@@ -1571,7 +1586,7 @@ document.addEventListener('click', ev => {
   // Buttons that already speak a phrase keep their own speech; every other tap says the button's name.
   if (!SPEAKS_ITSELF.has(act)) speakButton(typeof out === 'string' ? out : label);
 });
-const SPEAKS_ITSELF = new Set(['partnerSay', 'partnerReplay', 'move', 'alt', 'pageSay', 'quickSay', 'hold', 'replay', 'react', 'join', 'newsSay', 'askBack', 'groupAsk', 'newsFollow', 'testVoice', 'toggleSpeakButtons']);
+const SPEAKS_ITSELF = new Set(['tellJoke', 'partnerSay', 'partnerReplay', 'move', 'alt', 'pageSay', 'quickSay', 'hold', 'replay', 'react', 'join', 'newsSay', 'askBack', 'groupAsk', 'newsFollow', 'testVoice', 'toggleSpeakButtons']);
 // The restore control is a label (it opens the file picker), so speak it here.
 document.addEventListener('click', ev => {
   const l = ev.target.closest('label[for="restoreIn"], label[for="photoIn"]');
