@@ -272,7 +272,7 @@ body { font-size: 1.0625rem; }
 .roundbtn { border-radius: 20px; background: var(--bg); box-shadow: var(--shadow); }
 .chip, .tog { box-shadow: none; background: var(--surface); border: 2px solid transparent; border-radius: 999px; }
 .chip.on { background: var(--fg); color: var(--bg); border-color: var(--fg); }
-.section .tog, .section .chip { background: var(--bg); box-shadow: inset 0 0 0 1.5px var(--line); }
+.section .tog, .section .chip { background: var(--bg); box-shadow: inset 0 0 0 1.5px var(--line-strong); }
 .tog.on { background: var(--accent-soft); color: var(--fg); border-color: var(--fg); font-weight: 700; }
 button:disabled { opacity: 0.45; cursor: default; }
 :root[data-theme="dark"] .big.primary .ic.ink, :root[data-theme="dark"] .badge .ic.ink, :root[data-theme="dark"] .partner .replies .tile.on .ic.ink { filter: brightness(0); }
@@ -321,6 +321,7 @@ button:disabled { opacity: 0.45; cursor: default; }
 html.big-text .brand { flex-wrap: wrap; }
 .mebtn { border: none; background: none; padding: 0; min-width: 44px; min-height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
 .setupbar { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+html.big-text .setupbar { position: fixed; left: 12px; right: 12px; bottom: calc(84px + env(safe-area-inset-bottom, 0px)); z-index: 7; background: var(--bg); padding: 8px; border-radius: 999px; box-shadow: 0 4px 24px rgba(17, 17, 20, 0.25); max-width: 456px; margin: 0 auto; }
 @keyframes spin { to { transform: rotate(360deg); } }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
 </style>
@@ -392,11 +393,11 @@ function shortLabel(r) { r.words[0].label = r.text.replace(/[!?.]+$/, '').toLowe
 // Replies that fit what Rori just said. Falls back to the general set when nothing matches.
 const R = (text, icon) => shortLabel(P(text, [icon]));
 const REPLY_RULES = [
-  { test: /\b(joke|why did|what do you call|knock knock)\b/i, replies: () => [R('LOL', 'lol'), R("That's funny!", 'excited'), R('Tell another one!', 'again'), R("I don't get it", 'confused'), R('Good one!', 'smile'), R('I have a joke!', 'idea')] },
-  { test: /\b(bye|see you|good night|gotta go|later)\b/i, replies: () => [R('Bye!', 'bye'), R('See you later!', 'wave'), R('See you tomorrow!', 'school'), R('Text me!', 'textmsg'), R('Have fun!', 'excited'), R('Good night!', 'home')] },
-  { test: /\bhow are you|how's it going|what's up\b/i, replies: () => [R('Good!', 'smile'), R('Great!', 'excited'), R('Tired', 'wait'), R('Not great', 'confused'), R('And you?', 'you'), R('Pretty good!', 'yes')] },
-  { test: /^(hi|hey|hello)\b/i, replies: () => [R('Hi!', 'wave'), R('Hey!', 'smile'), R('How are you?', 'howru'), R("What's up?", 'question'), R('Good to see you!', 'excited'), R('What did you do?', 'do')] },
   { test: /\b(want to|wanna|can i|can we|let's|do you want)\b/i, replies: () => [R('Yes!', 'yes'), R('Sure!', 'smile'), R('Maybe later', 'wait'), R('No thanks', 'no'), R('When?', 'saturday'), R('Where?', 'outside')] },
+  { test: /\bhow are you|how's it going|what's up\b/i, replies: () => [R('Good!', 'smile'), R('Great!', 'excited'), R('Tired', 'wait'), R('Not great', 'confused'), R('And you?', 'you'), R('Pretty good!', 'yes')] },
+  { test: /\b(joke|why did|what do you call|knock knock)\b/i, replies: () => [R('LOL', 'lol'), R("That's funny!", 'excited'), R('Tell another one!', 'again'), R("I don't get it", 'confused'), R('Good one!', 'smile'), R('I have a joke!', 'idea')] },
+  { test: /^(hi|hey|hello|good morning|good afternoon)\b|good to see you/i, replies: () => [R('Hi!', 'wave'), R('Hey!', 'smile'), R('How are you?', 'howru'), R("What's up?", 'question'), R('Good to see you!', 'excited'), R('What did you do?', 'do')] },
+  { test: /\b(bye|good night|gotta go|see you (later|tomorrow|soon)|talk later)\b/i, replies: () => [R('Bye!', 'bye'), R('See you later!', 'wave'), R('See you tomorrow!', 'school'), R('Text me!', 'textmsg'), R('Have fun!', 'excited'), R('Good night!', 'home')] },
   { test: /\bhold on|wait\b/i, replies: () => [R("OK, I'll wait", 'wait'), R('Take your time', 'smile'), R("I'm listening", 'ear')] },
   { test: /\b(sad|tired|scared|hurt|bad day|not good|mad)\b/i, replies: () => [R('Oh no', 'confused'), R('Are you OK?', 'question'), R('Want to talk?', 'chat'), R("I'm sorry", 'same'), R('Want a hug?', 'friend'), R('Can I help?', 'help')] },
   { test: /\b(what did you do|what are you doing|what's new)\b/i, replies: () => [R('Not much', 'home'), R('I played games', 'gaming'), R('I hung out', 'hangout'), R('I watched a show', 'movie'), R('I went out', 'outside'), R('And you?', 'you')] },
@@ -563,8 +564,8 @@ function friend() { return S.profile.friends.find(f => f.id === S.withId) || nul
 function interestsInPlay() {
   const f = friend(), mine = S.profile.likes || [];
   // With a friend: things you both like first, then theirs. With anyone: Rori's own likes.
-  if (f) return f.interests.filter(i => mine.includes(i)).concat(f.interests.filter(i => !mine.includes(i))).slice(0, 3);
-  return mine.slice(0, 3);
+  if (f) return f.interests.filter(i => mine.includes(i)).concat(f.interests.filter(i => !mine.includes(i)));
+  return mine.slice();
 }
 function sortedNews() { return S.news.slice().sort((a, b) => (b.created || 0) - (a.created || 0)); }
 /* Place-specific phrases come first on Hi, Ask, More and Bye, so tapping School, Lunch, Home or Out changes what is suggested. */
@@ -769,6 +770,7 @@ async function resetAll() {
 }
 function updateSetupBar() {
   const el = document.getElementById('setupBar'); if (!el) return;
+  renderStatus();
   el.innerHTML = S.view === 'setup' && S.setupDirty ? `<div class="setupbar" role="group" aria-label="Unsaved changes">
     <button class="big" data-act="setupCancel">${ic('no', 'm')}Cancel</button>
     <button class="big primary" data-act="setupSave">${ic('savecheck', 'm')}Save</button>
@@ -783,6 +785,7 @@ function renderStatus() {
   const el = document.getElementById('status');
   let icon = 'yes', text = '';
   if (store.error) { icon = 'help'; text = store.error; }
+  else if (S.setupDirty) { icon = 'wait'; text = 'Not saved yet'; }
   else if (store.saving) { icon = 'wait'; text = 'Saving'; }
   else if (store.mode === 'db') { text = 'Saved to your account'; }
   else if (store.mode === 'local') { text = 'Saved on this phone'; }
@@ -1457,7 +1460,7 @@ const actions = {
     // Phones get the share sheet (Save to Files); computers download the file.
     const phone = window.matchMedia && matchMedia('(pointer: coarse)').matches;
     if (phone && file && navigator.canShare && navigator.canShare({ files: [file] })) {
-      navigator.share({ files: [file], title: 'Jump In backup' }).catch(e => { if (!e || e.name !== 'AbortError') download(); });
+      navigator.share({ files: [file], title: 'Jump In backup' }).catch(e => { if (!e || e.name !== 'AbortError') download(); else { S.backupMsg = ''; render(); } });
     } else download();
     S.backupMsg = 'Backup made. Keep the file somewhere safe, like the Files app.'; S.backupErr = false; render();
   },
