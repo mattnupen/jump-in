@@ -16,5 +16,7 @@ fs.cpSync(from, to, { recursive: true, filter: src => path.basename(src) !== 'sw
 const file = path.join(to, 'index.html');
 const html = fs.readFileSync(file, 'utf8');
 if (!html.includes('<head>')) throw new Error('public/index.html has no <head>; run node build.js first');
-fs.writeFileSync(file, html.replace('<head>', `<head>\n<script>window.JUMPIN_API = ${JSON.stringify(API)};</script>`));
+// The iPhone app leaves out "Back up my settings" (Matt's call); Restore stays.
+const IOS_CSS = '[data-act="backup"]{display:none!important}';
+fs.writeFileSync(file, html.replace('<head>', `<head>\n<script>window.JUMPIN_API = ${JSON.stringify(API)};</script>\n<style>${IOS_CSS}</style>`));
 console.log(`Copied public/ to mobile/www (suggestions from ${API})`);
